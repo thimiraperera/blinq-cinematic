@@ -78,7 +78,7 @@ $$('.trial-form').forEach(form=>{
 $$('a[href="#trial"]').forEach(a=>a.addEventListener('click',()=>$('#trial-email').focus({preventScroll:true})));
 
 /* Sticky bar waits until the hero and its form have scrolled away */
-new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('.hero'));
+new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('.hero-panel'));
 
 /* One question: strike the steps out when the list comes into view */
 (function(){
