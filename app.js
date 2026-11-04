@@ -1,8 +1,9 @@
+document.documentElement.classList.add('js');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function closeMenus(){$$('.mega').forEach(x=>x.hidden=true);$$('[data-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));$('#shade').hidden=true;$('#mobile-menu').setAttribute('aria-expanded','false')}
 $$('[data-menu]').forEach(b=>b.onclick=()=>{const open=$('#'+b.dataset.menu).hidden;closeMenus();if(open){$('#'+b.dataset.menu).hidden=false;$('#shade').hidden=false;b.setAttribute('aria-expanded','true')}});
 $('#mobile-menu').onclick=()=>{const open=$('#solutions').hidden;closeMenus();if(open){$('#solutions').hidden=false;$('#shade').hidden=false;$('#mobile-menu').setAttribute('aria-expanded','true')}};$('#shade').onclick=closeMenus;$$('.mega a').forEach(a=>a.addEventListener('click',closeMenus));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenus()});
-const slides=[['onsite-measuring.webp','BUILT FOR WINDOW FURNISHINGS','A clearer way to work.','From the first measure to the finishing touch.','Window furnishing professional measuring a roller blind'],['human-installer.webp','BLINQ MOBILE APP','Great work starts on site.','Measurements, photos and quotes. Together.','An installer completing curtains at a customer’s home'],['fabric-consultation.webp','FROM ENQUIRY TO INSTALLATION','More time for your customers.','Bring every part of your business together.','Window furnishing professional consulting with a customer']];
+const slides=[['scenes/hero-clearer-way.webp','Still typing up quotes at 9pm?','There’s a clearer way to work.','A window furnishing consultant finishing a quote at a customer’s home'],['scenes/hero-on-site.webp','Measurements on the back of an envelope?','Great work starts on site.','A window furnishing professional measuring up at a customer’s home'],['scenes/hero-customers.webp','Buried in admin with a customer in front of you?','More time for your customers.','A window furnishing professional giving a customer her full attention']];
 let heroIndex=0,heroTimer,heroPaused=matchMedia('(prefers-reduced-motion: reduce)').matches,heroTransition;
 slides.forEach(s=>{const img=new Image();img.src='assets/'+s[0]});
 function showHero(index){
@@ -10,10 +11,10 @@ function showHero(index){
  const incoming=$('#hero-image-next'),base=$('#hero-image');
  if(incoming.classList.contains('visible')){base.src=incoming.src;incoming.classList.remove('visible')}
  heroIndex=(index+slides.length)%slides.length;const s=slides[heroIndex];
- incoming.src='assets/'+s[0];base.alt=s[4];
+ incoming.src='assets/'+s[0];base.alt=s[3];
  requestAnimationFrame(()=>requestAnimationFrame(()=>incoming.classList.add('visible')));
  heroTransition=setTimeout(()=>{base.src=incoming.src;incoming.classList.remove('visible')},850);
- $('#hero-kicker').textContent=s[1];$('#hero-title').textContent=s[2];$('#hero-subtitle').textContent=s[3];
+ const lines=$('.hero-lines');lines.classList.add('is-out');setTimeout(()=>{$('#hero-question').textContent=s[1];$('#hero-title').textContent=s[2];lines.classList.remove('is-out')},260);
  $$('[data-slide]').forEach(x=>{const active=+x.dataset.slide===heroIndex;x.classList.toggle('active',active);x.setAttribute('aria-pressed',active)})
 }
 function startHero(){clearInterval(heroTimer);if(!heroPaused&&!document.hidden)heroTimer=setInterval(()=>showHero(heroIndex+1),6000)}
@@ -27,9 +28,75 @@ $('.hero').addEventListener('focusin',()=>clearInterval(heroTimer));$('.hero').a
 document.addEventListener('visibilitychange',startHero);syncPause();startHero();
 
 ['prev','next'].forEach((id,i)=>$('#'+id).onclick=()=>$('#product-track').scrollBy({left:(i?1:-1)*($('#product-track').clientWidth*.74),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
-const features=[['CAPTURE & BOOK','Every enquiry. A clear next step.','Capture the enquiry, keep the conversation and book the appointment. All on one customer record.','fabric-consultation.webp'],['MEASURE & QUOTE','Send the quote while you’re there.','Capture sizes and product choices on site. Apply your pricing rules and send a professional quotation.','onsite-measuring.webp'],['WIN THE SALE','Keep the opportunity moving.','Follow up outstanding quotations, record approvals and deposits, then turn an accepted quote into a job.','human-dealer.webp'],['ORDER & PRODUCE','From confirmed sizes to ready to install.','Prepare supplier orders and follow production and incoming goods. Keep the next step connected to the job.','human-factory.webp'],['INSTALL & COMPLETE','Finish with everything in place.','Schedule the installer, track completion and collect the balance. Keep the full customer history ready for their next project.','human-installer.webp']];
-function feature(i){const f=features[i];$('#feature-label').textContent=f[0];$('#feature-title').textContent=f[1];$('#feature-copy').textContent=f[2];$('#feature-image').src='assets/'+f[3];$('#feature-image').alt=['A consultant helping a customer choose fabrics','A professional measuring a customer’s windows','A business owner discussing window furnishing options','Two makers assembling a roller blind','An installer completing curtains in a customer’s home'][i];$$('[data-feature]').forEach(b=>b.setAttribute('aria-selected',+b.dataset.feature===i))}$$('[data-feature]').forEach(b=>{b.onclick=()=>feature(+b.dataset.feature);b.onkeydown=e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const i=(+b.dataset.feature+(e.key==='ArrowRight'?1:4))%5;feature(i);$$('[data-feature]')[i].focus()}}});
 const details={retail:['RETAILSELECT','Your entire retail workflow.','Bring the everyday work of your window furnishing business into one connected system.',['Manage leads and customer records','Schedule appointments and staff','Create quotations and convert approvals into jobs','Connect supplier purchase orders, invoices and payments']],manufacturing:['MANUFACTURESELECT','From order to production.','Connect your sales and production workflow with the tools your manufacturing team needs.',['Let dealers submit product selections and sizes','Coordinate production and material requirements','Follow work through production and dispatch','Keep dealer invoices connected to the order']],wholesale:['DEALERSELECT','Connect your dealer network.','Give wholesale operations a connected foundation with BlinQ’s wholesale and dealer tools.',['Give dealers a connected quoting and ordering workflow','Configure products and dealer pricing','Review orders before production and fulfilment','Keep invoices and dealer accounts together']],mobile:['BLINQ MOBILE APP','Your quoting workflow. On site.','Bring your product and customer information to the appointment, with tools to prepare quotes while you are there.',['Capture measurements and product selections','Attach photos and job information','Create and send customer quotations','Compare the mobile app plan and full platform options']],integrations:['CONNECTED TOOLS','Work with the tools you know.','Explore the available integrations and confirm which options fit your account, region and workflow.',['Accounting: Xero, QuickBooks and MYOB','Payments: Stripe','Scheduling: Google Calendar','Custom connections: BlinQ OpenAPI']],widget:['IWIDGET','Turn your website into a showroom.','Explore an online product and quoting experience connected to BlinQ.',['Present your products, fabrics and options','Let shoppers enter width and drop','Connect online checkout to your ordering workflow','Discuss website setup and product configuration']],api:['OPENAPI','Build your next connection.','Explore custom integrations using BlinQ’s OpenAPI documentation.',['Review the available API documentation','Scope the information your integration needs','Plan authentication and access','Discuss your integration with the BlinQ team']]};
 function showDetail(key){const d=details[key];$('#detail-label').textContent=d[0];$('#detail-title').textContent=d[1];$('#detail-copy').textContent=d[2];$('#detail-list').replaceChildren(...d[3].map(t=>{const li=document.createElement('li');li.textContent=t;return li}));$('#detail-dialog').showModal();document.body.classList.add('modal-open')}
 $$('[data-detail]').forEach(b=>b.onclick=()=>showDetail(b.dataset.detail));$('.close').onclick=()=>$('#detail-dialog').close();$('#detail-dialog').addEventListener('close',()=>document.body.classList.remove('modal-open'));$('#detail-dialog').addEventListener('click',e=>{if(e.target===$('#detail-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close()}});
-$$('[data-growth]').forEach(b=>b.onclick=()=>{const api=b.dataset.growth==='1';$('.growth-visual img').src=api?'assets/human-dealer.webp':'assets/human-customer.webp';$('.growth-visual img').alt=api?'Window furnishing professionals collaborating':'A couple choosing window furnishing fabrics at home';$('#growth-title').innerHTML=api?'Your tools.<br>Working together.':'Your products.<br>Ready to order online.';$('#growth-copy').textContent=api?'Connect your workflow with other business tools through BlinQ’s OpenAPI.':'Let customers choose products, enter measurements and order on your website. Bring the details into BlinQ.';$('#growth-learn').textContent=api?'Explore OpenAPI':'Discover iWidget';$('#growth-learn').dataset.detail=api?'api':'widget';$('#growth-caption').textContent=api?'YOUR TOOLS. YOUR CONNECTIONS. YOUR POSSIBILITIES.':'YOUR PRODUCTS. YOUR BRAND. YOUR WORKFLOW.';$$('[data-growth]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b)})});
+$$('[data-growth]').forEach(b=>b.onclick=()=>{const api=b.dataset.growth==='1';$('.growth-visual img').src=api?'assets/human-dealer.webp':'assets/scenes/growth-online-order.webp';$('.growth-visual img').alt=api?'Window furnishing professionals collaborating':'A couple ordering blinds online at home';$('#growth-title').innerHTML=api?'Your tools.<br>Working together.':'Your products.<br>Ready to order online.';$('#growth-copy').textContent=api?'Connect your workflow with other business tools through BlinQ’s OpenAPI.':'Let customers choose products, enter measurements and order on your website. Bring the details into BlinQ.';$('#growth-learn').textContent=api?'Explore OpenAPI':'Discover iWidget';$('#growth-learn').dataset.detail=api?'api':'widget';$('#growth-caption').textContent=api?'YOUR TOOLS. YOUR CONNECTIONS. YOUR POSSIBILITIES.':'YOUR PRODUCTS. YOUR BRAND. YOUR WORKFLOW.';$$('[data-growth]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b)})});
+
+/* Flip counter. A fixed number, like blinq.com.au: it counts up on arrival and stops, so it never
+   claims to be live. Production should write the real total here, as the main site does. */
+const QUOTES_TOTAL=781639;
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function(){
+ const box=$('#quote-flip');if(!box)return;
+ const paint=(tile,d)=>{tile.dataset.d=d;tile.innerHTML=`<span class="half top"><span>${d}</span></span><span class="half bottom"><span>${d}</span></span>`};
+ const start=reducedMotion?QUOTES_TOTAL:QUOTES_TOTAL-36;
+ const tiles=[...String(start)].map(d=>{const t=document.createElement('span');t.className='flip-tile';t.setAttribute('aria-hidden','true');paint(t,d);return t});
+ box.replaceChildren(...tiles);
+ const flip=(tile,next)=>{
+  const cur=tile.dataset.d;if(cur===next)return;
+  tile.dataset.d=next;
+  tile.querySelectorAll('.flap-out,.flap-in').forEach(x=>x.remove());
+  tile.querySelector('.top>span').textContent=next;
+  tile.querySelector('.bottom>span').textContent=cur;
+  const out=document.createElement('span');out.className='half top flap-out';out.innerHTML=`<span>${cur}</span>`;
+  const inn=document.createElement('span');inn.className='half bottom flap-in';inn.innerHTML=`<span>${next}</span>`;
+  inn.addEventListener('animationend',()=>{tile.querySelector('.bottom>span').textContent=next;out.remove();inn.remove()},{once:true});
+  tile.append(out,inn);
+ };
+ let n=start;
+ const step=()=>{
+  if(n>=QUOTES_TOTAL)return;
+  n++;[...String(n)].forEach((d,i)=>flip(tiles[i],d));
+  const left=QUOTES_TOTAL-n;
+  setTimeout(step,left>10?46:46+(10-left)*26);
+ };
+ if(!reducedMotion)setTimeout(step,650);
+})();
+
+/* Trial forms. Template only: the real signup runs on blinq.com.au, so this checks the address and
+   goes to its pricing page. The address is not sent or stored. Connect the signup endpoint in production. */
+$$('.trial-form').forEach(form=>{
+ const input=form.querySelector('input'),error=form.nextElementSibling;
+ form.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!input.value.trim()||!input.checkValidity()){error.textContent='Enter your email address to start the trial.';input.focus();return}
+  error.textContent='';location.href=form.action;
+ });
+ input.addEventListener('input',()=>{error.textContent=''});
+});
+$$('a[href="#trial"]').forEach(a=>a.addEventListener('click',()=>$('#trial-email').focus({preventScroll:true})));
+
+/* Sticky bar waits until the hero and its form have scrolled away */
+new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('.hero'));
+
+/* One question: strike the steps out when the list comes into view */
+(function(){
+ const work=$('.friction-work');
+ [...work.querySelectorAll('.cut')].forEach((li,i)=>li.style.setProperty('--i',i));
+ new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){work.classList.add('in-view');o.disconnect()}}),{threshold:.3}).observe(work);
+})();
+
+/* One ordinary Tuesday: the photo holds still while the day scrolls past */
+(function(){
+ const stage=$('.day-stage'),moments=$$('.moment');
+ moments.forEach((m,i)=>{
+  const shot=m.querySelector('.moment-shot').cloneNode(true);
+  shot.className='stage-shot';stage.append(shot);m.dataset.i=i;
+ });
+ const shots=[...stage.children];
+ const activate=i=>{moments.forEach((m,j)=>m.classList.toggle('is-active',j===i));shots.forEach((s,j)=>s.classList.toggle('is-active',j===i))};
+ activate(0);
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)activate(+e.target.dataset.i)}),{rootMargin:'-48% 0px -48% 0px'});
+ moments.forEach(m=>io.observe(m));
+})();
