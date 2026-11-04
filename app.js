@@ -3,21 +3,31 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function closeMenus(){$$('.mega').forEach(x=>x.hidden=true);$$('[data-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));$('#shade').hidden=true;$('#mobile-menu').setAttribute('aria-expanded','false')}
 $$('[data-menu]').forEach(b=>b.onclick=()=>{const open=$('#'+b.dataset.menu).hidden;closeMenus();if(open){$('#'+b.dataset.menu).hidden=false;$('#shade').hidden=false;b.setAttribute('aria-expanded','true')}});
 $('#mobile-menu').onclick=()=>{const open=$('#solutions').hidden;closeMenus();if(open){$('#solutions').hidden=false;$('#shade').hidden=false;$('#mobile-menu').setAttribute('aria-expanded','true')}};$('#shade').onclick=closeMenus;$$('.mega a').forEach(a=>a.addEventListener('click',closeMenus));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenus()});
-const slides=[['scenes/hero-clearer-way.webp','Still typing up quotes at 9pm?','There’s a clearer way to work.','A window furnishing consultant finishing a quote at a customer’s home'],['scenes/hero-on-site.webp','Measurements on the back of an envelope?','Great work starts on site.','A window furnishing professional measuring up at a customer’s home'],['scenes/hero-customers.webp','Buried in admin with a customer in front of you?','More time for your customers.','A window furnishing professional giving a customer her full attention']];
-let heroIndex=0,heroTimer,heroPaused=matchMedia('(prefers-reduced-motion: reduce)').matches,heroTransition;
-slides.forEach(s=>{const img=new Image();img.src='assets/'+s[0]});
+const slides=[['scenes/hero-clearer-way.webp','Still typing up quotes at 9pm?','There’s a clearer way to work.','A window furnishing consultant finishing a quote at a customer’s home','38% 30%'],['scenes/hero-on-site.webp','Measurements on the back of an envelope?','Great work starts on site.','A window furnishing professional measuring up at a customer’s home','31% 42%'],['scenes/hero-customers.webp','Buried in admin with a customer in front of you?','More time for your customers.','A window furnishing professional giving a customer her full attention','45% 30%']];
+let heroIndex=0,heroTimer,heroPaused=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* One layer per slide, so each photo keeps its own slow zoom while it fades over the last one.
+   The fifth value in each slide is where the zoom heads: set it to the person's face. */
+const heroLayers=slides.map((s,i)=>{
+ let img=i?null:$('#hero-media img');
+ if(!img){img=new Image();img.src='assets/'+s[0];img.alt='';$('#hero-media').append(img)}
+ img.style.setProperty('--focus',s[4]);
+ return img;
+});
 function showHero(index){
- clearTimeout(heroTransition);
- const incoming=$('#hero-image-next'),base=$('#hero-image');
- if(incoming.classList.contains('visible')){base.src=incoming.src;incoming.classList.remove('visible')}
- heroIndex=(index+slides.length)%slides.length;const s=slides[heroIndex];
- incoming.src='assets/'+s[0];base.alt=s[3];
- requestAnimationFrame(()=>requestAnimationFrame(()=>incoming.classList.add('visible')));
- heroTransition=setTimeout(()=>{base.src=incoming.src;incoming.classList.remove('visible')},850);
+ const next=(index+slides.length)%slides.length;
+ if(next===heroIndex)return;
+ const old=heroLayers[heroIndex],layer=heroLayers[next],s=slides[next];
+ heroIndex=next;
+ clearTimeout(old.leaving);old.classList.remove('is-active');old.classList.add('is-leaving');
+ old.leaving=setTimeout(()=>old.classList.remove('is-leaving'),1300);
+ clearTimeout(layer.leaving);layer.classList.remove('is-leaving');
+ void layer.offsetWidth;
+ layer.classList.add('is-active');
+ old.alt='';layer.alt=s[3];
  const lines=$('.hero-lines');lines.classList.add('is-out');setTimeout(()=>{$('#hero-question').textContent=s[1];$('#hero-title').textContent=s[2];lines.classList.remove('is-out')},260);
  $$('[data-slide]').forEach(x=>{const active=+x.dataset.slide===heroIndex;x.classList.toggle('active',active);x.setAttribute('aria-pressed',active)})
 }
-function startHero(){clearInterval(heroTimer);if(!heroPaused&&!document.hidden)heroTimer=setInterval(()=>showHero(heroIndex+1),6000)}
+function startHero(){clearInterval(heroTimer);if(!heroPaused&&!document.hidden)heroTimer=setInterval(()=>showHero(heroIndex+1),7000)}
 function manualHero(i){showHero(i);startHero()}
 $$('[data-slide]').forEach(b=>b.onclick=()=>manualHero(+b.dataset.slide));
 $('.hero-prev').onclick=()=>manualHero(heroIndex-1);$('.hero-next').onclick=()=>manualHero(heroIndex+1);
@@ -99,4 +109,21 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  activate(0);
  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)activate(+e.target.dataset.i)}),{rootMargin:'-48% 0px -48% 0px'});
  moments.forEach(m=>io.observe(m));
+})();
+
+/* Scrolling pushes the hero zoom further, and the headline drifts up and fades */
+(function(){
+ if(reducedMotion)return;
+ const wrap=$('.hero-wrap'),media=$('#hero-media'),copy=$('.hero-copy');
+ let queued=false;
+ const paint=()=>{
+  queued=false;
+  const p=Math.min(1,Math.max(0,scrollY/wrap.offsetHeight));
+  media.style.setProperty('--zoom',(1+p*.5).toFixed(4));
+  copy.style.opacity=Math.max(0,1-p*1.7).toFixed(3);
+  copy.style.transform=`translateY(${(p*-70).toFixed(1)}px)`;
+ };
+ addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(paint)}},{passive:true});
+ addEventListener('resize',paint);
+ paint();
 })();
