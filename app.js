@@ -88,7 +88,7 @@ $$('.trial-form').forEach(form=>{
 $$('a[href="#trial"]').forEach(a=>a.addEventListener('click',()=>$('#trial-email').focus({preventScroll:true})));
 
 /* Sticky bar waits until the hero and its form have scrolled away */
-new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('.hero-panel'));
+new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('#trial'));
 
 /* One question: strike the steps out when the list comes into view */
 (function(){
@@ -118,9 +118,9 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  let queued=false;
  const paint=()=>{
   queued=false;
-  const p=Math.min(1,Math.max(0,scrollY/wrap.offsetHeight));
-  media.style.setProperty('--zoom',(1+p*.5).toFixed(4));
-  copy.style.opacity=Math.max(0,1-p*1.7).toFixed(3);
+  const p=Math.min(1,Math.max(0,scrollY/(wrap.offsetHeight*.7)));
+  media.style.setProperty('--zoom',(1+p*.6).toFixed(4));
+  copy.style.opacity=Math.max(0,1-p*1.5).toFixed(3);copy.style.pointerEvents=p>.6?'none':'';
   copy.style.transform=`translateY(${(p*-70).toFixed(1)}px)`;
  };
  addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(paint)}},{passive:true});
