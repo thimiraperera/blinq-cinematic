@@ -66,7 +66,6 @@ body{background:var(--site-gutter)}
 @media(max-width:600px){#pricing{padding:55px 6%}#pricing .pricing-cards{grid-template-columns:1fr;gap:38px;margin-top:32px}#pricing .pricing-card{padding-top:24px}#pricing .pricing-icon{margin-bottom:16px}#pricing .pricing-card h3{font-size:28px;min-height:0;margin-bottom:23px}#pricing .licence-price strong{font-size:48px}#pricing .pricing-direct{min-height:0}}
 
 /* Compact integration hub. */
-.integration-hub{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(0,1.7fr);align-items:center;gap:6%;padding:42px 7%;background:#fff;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8}.hub-copy h2{font-size:32px;letter-spacing:-1px;line-height:1.15;margin-bottom:16px}.hub-copy>p:not(.eyebrow){font-size:14px;line-height:1.7;color:var(--muted);max-width:300px}.hub-explore{background:none;padding:0 0 7px;border-bottom:1px solid #999;font-size:13px;font-weight:500;margin-top:8px}.hub-explore span{padding-left:12px}.hub-map{height:300px;position:relative;isolation:isolate}.hub-lines{position:absolute;inset:0;width:100%;height:100%;z-index:-1;fill:none;stroke:#d8d8d8;stroke-width:1;vector-effect:non-scaling-stroke}.hub-centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:112px;height:112px;border:1px solid #ddd;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 0 0 10px #ffffff}.hub-centre img{width:83px;display:block}.hub-node{position:absolute;transform:translate(-50%,-50%);width:142px;min-height:62px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:#ffffff;border:1px solid #ededed;border-radius:6px;text-align:center;padding:10px 6px}.hub-node>span{font-size:15px;font-weight:550;letter-spacing:-.3px}.hub-node small{font-size:10px;color:var(--muted)}.hub-xero{left:16.666%;top:15.625%}.hub-quickbooks{left:83.333%;top:15.625%}.hub-myob{left:16.666%;top:50%}.hub-stripe{left:83.333%;top:50%}.hub-calendar{left:16.666%;top:84.375%}.hub-api{left:83.333%;top:84.375%}.hub-api:hover{border-color:#999;background:#f2f2f2}@media(max-width:950px){.integration-hub{grid-template-columns:1fr;gap:15px;padding:40px 7%}.hub-copy{max-width:550px}.hub-copy>p:not(.eyebrow){max-width:450px}.hub-map{max-width:650px;width:100%;margin:0 auto;height:270px}}@media(max-width:600px){.integration-hub{padding:36px 6%;gap:20px}.hub-copy h2{font-size:28px;margin-bottom:12px}.hub-copy>p:not(.eyebrow){font-size:13px;margin-bottom:12px}.hub-map{height:238px}.hub-centre{width:78px;height:78px;box-shadow:0 0 0 6px #ffffff}.hub-centre img{width:60px}.hub-node{width:100px;min-height:56px;gap:5px;padding:8px 3px}.hub-node>span{font-size:12px;letter-spacing:-.3px}.hub-node small{font-size:8px}}
 
 /* ==========================================================================
    Real-life story layer: hero counter and trial form, the "one question"
@@ -389,11 +388,6 @@ header{position:sticky;top:0}
 .hero-media img{object-position:50% 50%}
 
 /* Connected tools: real logos */
-.hub-node{width:158px;gap:7px}
-.hub-node img{display:block;width:auto;max-width:118px;height:24px;object-fit:contain}
-.hub-node small{font-size:11.5px}
-.hub-api-name{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;letter-spacing:-.2px}
-.hub-api-name svg{width:20px;height:20px;color:var(--red)}
 @media(max-width:800px){
 .eyebrow{font-size:13px;letter-spacing:0}
 .hero-media img{object-position:var(--pos,50% 50%);transform-origin:50% 38%}
@@ -401,8 +395,6 @@ header{position:sticky;top:0}
 .hero-copy .eyebrow{display:none}
 .hero-media img{height:86%;bottom:auto;-webkit-mask-image:linear-gradient(#000 78%,#0000);mask-image:linear-gradient(#000 78%,#0000)}
 .hero-tint{background:linear-gradient(180deg,#00000014 0,#00000026 24%,#000000a6 48%,#000000c7 100%)}
-.hub-node{width:132px}
-.hub-node img{max-width:100px;height:20px}
 }
 
 /* Hero: clean photos with the people on the right, so the text sits on the left and never covers a face */
@@ -544,3 +536,37 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .testimonial-controls button{border-radius:50%;color:var(--ink)}
 @media(max-width:1000px){.testimonial-track>.testimonial-video{flex-basis:calc((100% - 22px)/2)}}
 @media(max-width:600px){.testimonial-track{gap:16px}.testimonial-track>.testimonial-video{flex-basis:88%}.testimonial-track .testimonial-body{padding:20px}}
+
+
+.integration-hub{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr);gap:44px 6%;padding:76px 7% 58px;background:#fff;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8}
+.integration-intro{align-self:center;min-width:0}
+.integration-intro h2{font-size:clamp(36px,calc(3.2*var(--site-vw)),48px);line-height:1.1;letter-spacing:-1.5px;margin-bottom:22px}
+.integration-intro>p:not(.eyebrow){font-size:14px;line-height:1.8;color:var(--muted);max-width:320px;margin-bottom:26px}
+.integration-intro .btn{gap:18px;min-width:0}
+.integration-brand{display:flex;align-items:center;gap:14px;border-top:1px solid #eee;padding-top:24px;margin-top:32px}
+.integration-brand img{display:block;width:72px;height:auto}
+.integration-brand span{font-size:11px;color:#777;line-height:1.5}
+.integration-directory{min-width:0}
+.integration-directory-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px;font-size:12px;font-weight:550}
+.integration-directory-heading>span:last-child{font-size:11px;font-weight:400;color:#888}
+.integration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.integration-card{display:flex;flex-direction:column;min-width:0;padding:24px 19px 20px;border:1px solid #e7e7ea;border-radius:10px;background:linear-gradient(150deg,#fff,#fafafa)}
+.integration-logo{display:flex;align-items:center;gap:7px;height:32px;margin-bottom:26px}
+.integration-logo img{display:block;max-width:100%;width:auto;height:25px;object-fit:contain;object-position:left center}
+.integration-category{font-size:12px;font-weight:550;line-height:1.5;color:var(--ink)}
+.integration-card p{font-size:11px;line-height:1.6;color:#777;margin:6px 0 0}
+.integration-api{transition:border-color .2s,background .2s}
+.integration-api:hover{border-color:#d8979a;background:#fff8f8}
+.integration-api svg{width:22px;height:22px;flex:none;color:var(--red)}
+.integration-api strong{font-size:15px;font-weight:600;letter-spacing:-.5px}
+.integration-api .integration-logo>span{font-size:14px;color:#777;margin-left:auto}
+.integration-more{grid-column:1/-1;border-top:1px solid #e8e8e8;padding-top:30px}
+.integration-more-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
+.integration-more h3{font-size:19px;font-weight:550;letter-spacing:-.3px;margin:0}
+.integration-more-heading p{font-size:12px;line-height:1.6;color:#888;margin:0}
+.integration-examples{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.integration-examples li{display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:58px;padding:12px 8px;border-radius:8px;background:#f8f8f9;font-size:12px;font-weight:550;color:#555}
+.integration-examples img{width:22px;height:22px;object-fit:contain;flex:none}
+.integration-examples img[src$="tool-woocommerce.svg"]{width:104px;height:24px}
+@media(max-width:1100px){.integration-hub{grid-template-columns:1fr;gap:34px}.integration-intro h2 br{display:none}.integration-intro>p:not(.eyebrow){max-width:550px}.integration-brand{display:none}.integration-examples{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.integration-hub{padding:48px 6%;gap:30px}.integration-intro h2{font-size:35px}.integration-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.integration-card{padding:20px 14px}.integration-logo{margin-bottom:20px}.integration-logo img{height:22px}.integration-directory-heading>span:last-child{display:none}.integration-more-heading{align-items:flex-start;flex-direction:column;gap:8px}.integration-examples{grid-template-columns:repeat(2,minmax(0,1fr))}.integration-more{padding-top:24px}}
