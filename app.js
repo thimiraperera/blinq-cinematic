@@ -208,9 +208,9 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
 
 (function(){
  const carousel=$('.testimonial-carousel'),track=carousel.querySelector('.testimonial-track');
- const cards=[...track.children],pause=carousel.querySelector('.testimonial-pause');
+ const cards=[...track.children];
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
- let paused=false,hovered=false,visible=false,last=0,position=0,cycle=0;
+ let resumeAt=0,hovered=false,visible=false,last=0,position=0,cycle=0;
  cards.forEach(card=>{
   const copy=card.cloneNode(true);copy.setAttribute('aria-hidden','true');
   copy.querySelectorAll('a,button').forEach(el=>el.tabIndex=-1);track.append(copy);
@@ -218,7 +218,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  const measure=()=>{cycle=track.children[cards.length].offsetLeft-track.children[0].offsetLeft;position=track.scrollLeft};
  const tick=now=>{
   const elapsed=Math.min(now-last,50);last=now;
-  if(visible&&!paused&&!hovered&&!motion.matches&&!document.hidden&&!track.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&cycle){
+  if(visible&&now>=resumeAt&&!hovered&&!motion.matches&&!document.hidden&&!track.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&cycle){
    position=(position+elapsed*.025)%cycle;track.scrollLeft=position;
   }else position=track.scrollLeft;
   requestAnimationFrame(tick);
@@ -226,12 +226,11 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  track.addEventListener('scroll',()=>{if(cycle&&track.scrollLeft>=cycle){track.scrollLeft-=cycle;position=track.scrollLeft}},{passive:true});
  track.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hovered=true});
  track.addEventListener('pointerleave',()=>hovered=false);
- const syncPause=()=>{pause.textContent=paused?'Play':'Pause';pause.setAttribute('aria-pressed',String(paused));pause.setAttribute('aria-label',(paused?'Play':'Pause')+' testimonial carousel')};
- pause.addEventListener('click',()=>{paused=!paused;syncPause()});
- track.addEventListener('pointerdown',()=>{paused=true;syncPause()},{passive:true});
- track.addEventListener('wheel',()=>{paused=true;syncPause()},{passive:true});
+ const pauseBriefly=()=>{resumeAt=performance.now()+4000};
+ track.addEventListener('pointerdown',pauseBriefly,{passive:true});
+ track.addEventListener('wheel',pauseBriefly,{passive:true});
  const move=direction=>{
-  paused=true;syncPause();
+  pauseBriefly();
   const step=cards[1].offsetLeft-cards[0].offsetLeft;
   if(direction<0&&track.scrollLeft<1){track.scrollLeft=cycle-step;return}
   track.scrollBy({left:direction*step,behavior:motion.matches?'instant':'smooth'});

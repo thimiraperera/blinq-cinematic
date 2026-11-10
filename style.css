@@ -420,9 +420,9 @@ header{position:sticky;top:0}
 
 .range .section-heading{align-items:flex-end;gap:24px}
 .range .arrows{flex:none;align-items:center;gap:10px;padding-bottom:2px}
-.range .arrows button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #dedede;background:#fff;transition:background .2s,border-color .2s,color .2s}
-.range .arrows button:hover{background:var(--ink);border-color:var(--ink);color:#fff}
-.range .arrows svg{display:block;width:21px;height:21px}
+.range .arrows button,.testimonial-controls button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #dedede;background:#fff;transition:background .2s,border-color .2s,color .2s}
+.range .arrows button:hover,.testimonial-controls button:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+.range .arrows svg,.testimonial-controls svg{display:block;width:21px;height:21px}
 .product-track.scroll-driven{scroll-snap-type:none;scroll-behavior:auto}
 @media(max-width:800px){
 .range .section-heading{padding-right:6.4%;gap:16px;flex-wrap:wrap}
@@ -538,9 +538,7 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .testimonial-track .testimonial-play svg{width:20px;height:20px}
 .testimonial-written{background:#f8f8f9}
 .testimonial-mark{font-family:Georgia,serif;font-size:86px;line-height:1;color:var(--red);margin:6px 0 12px}
-.testimonial-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:18px}
-.testimonial-controls button{display:grid;place-items:center;min-width:38px;height:38px;padding:0 12px;border:1px solid #e4e4e6;border-radius:7px;background:#fff;color:#555;font-size:11px}
-.testimonial-controls button:hover{background:#f5f5f6;color:var(--red)}
-.testimonial-controls svg{width:18px;height:18px}
+.testimonial-controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:18px}
+.testimonial-controls button{border-radius:50%;color:var(--ink)}
 @media(max-width:1000px){.testimonial-track>.testimonial-video{flex-basis:calc((100% - 22px)/2)}}
 @media(max-width:600px){.testimonial-track{gap:16px}.testimonial-track>.testimonial-video{flex-basis:88%}.testimonial-track .testimonial-body{padding:20px}}
