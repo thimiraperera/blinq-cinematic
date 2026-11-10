@@ -261,7 +261,7 @@ header{position:sticky;top:0}
 @keyframes hero-kb{from{--kb:1}to{--kb:1.05}}
 
 /* Client logos under the hero */
-.trust{padding:26px 0 30px;background:#fff;border-bottom:1px solid var(--line);text-align:center}
+.trust{padding:52px 0 56px;background:#fff;border-bottom:1px solid var(--line);text-align:center}
 .trust-label{margin:0 0 16px;color:#777;font-size:13px;font-weight:600;letter-spacing:0;}
 .trust-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000);mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000)}
 .trust-track{display:flex;width:max-content;animation:trust-move 50s linear infinite}
@@ -326,7 +326,7 @@ header{position:sticky;top:0}
 }
 @media(max-width:800px){
 .hero{top:64px}
-.trust{padding:20px 0 24px}
+.trust{padding:36px 0 40px}
 .trust-set{gap:40px;padding-right:40px}
 .trust-set img{height:28px}
 .people{padding-bottom:64px}
