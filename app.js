@@ -166,3 +166,28 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  });
  new IntersectionObserver(([entry])=>assistant.classList.toggle('is-offscreen',!entry.isIntersecting)).observe(assistant);
 })();
+
+
+(function(){
+ const dialog=$('#video-dialog'),player=dialog.querySelector('.video-player');
+ $$('.suite-play').forEach(button=>button.addEventListener('click',()=>{
+  const title=button.closest('.suite-item').querySelector('h3').textContent;
+  $('#video-title').textContent=title;
+  const frame=document.createElement('iframe');
+  frame.src='https://www.youtube.com/embed/'+encodeURIComponent(button.dataset.video)+'?autoplay=1&rel=0';
+  frame.title=title+' — BlinQ video';
+  frame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  frame.allowFullscreen=true;
+  frame.referrerPolicy='strict-origin-when-cross-origin';
+  player.replaceChildren(frame);
+  dialog.querySelector('.video-external').href='https://www.youtube.com/watch?v='+encodeURIComponent(button.dataset.video);
+  dialog.showModal();document.body.classList.add('modal-open');
+ }));
+ dialog.querySelector('.video-close').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('close',()=>{player.replaceChildren();document.body.classList.remove('modal-open')});
+ dialog.addEventListener('click',e=>{
+  if(e.target!==dialog)return;
+  const r=dialog.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();
+ });
+})();
