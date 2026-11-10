@@ -45,9 +45,10 @@ document.addEventListener('visibilitychange',startHero);syncPause();startHero();
  const paint=()=>{
   queued=false;
   if(manual||motion.matches)return;
-  const progress=Math.min(1,Math.max(0,(innerHeight*.85-section.getBoundingClientRect().top)/(innerHeight*.65)));
+  const bounds=section.getBoundingClientRect();
+  const progress=Math.min(1,Math.max(0,(innerHeight-bounds.top)/(innerHeight+bounds.height)));
   track.classList.add('scroll-driven');
-  track.scrollLeft=progress*Math.min(160,track.clientWidth*.16);
+  track.scrollLeft=progress*Math.min(420,track.clientWidth*.45);
  };
  const schedule=()=>{if(!queued&&!manual){queued=true;requestAnimationFrame(paint)}};
  ['prev','next'].forEach((id,i)=>$('#'+id).onclick=()=>{
