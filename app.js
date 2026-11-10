@@ -180,8 +180,9 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  };
  dialog.addEventListener('animationend',e=>{if(e.target===dialog&&e.animationName==='video-out')finishClose()});
  dialog.addEventListener('cancel',e=>{e.preventDefault();closeVideo()});
- $$('.suite-play').forEach(button=>button.addEventListener('click',()=>{
-  const title=button.closest('.suite-item').querySelector('h3').textContent;
+ $$('[data-video]').forEach(button=>button.addEventListener('click',e=>{
+  e.preventDefault();
+  const title=button.dataset.videoTitle||button.closest('.suite-item').querySelector('h3').textContent;
   $('#video-title').textContent=title;
   const frame=document.createElement('iframe');
   frame.src='https://www.youtube.com/embed/'+encodeURIComponent(button.dataset.video)+'?autoplay=1&rel=0';
