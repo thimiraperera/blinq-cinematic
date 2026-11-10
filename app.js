@@ -170,6 +170,16 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
 
 (function(){
  const dialog=$('#video-dialog'),player=dialog.querySelector('.video-player');
+ let closeTimer;
+ const finishClose=()=>{clearTimeout(closeTimer);player.replaceChildren();if(dialog.open)dialog.close();document.body.classList.remove('modal-open')};
+ const closeVideo=()=>{
+  if(!dialog.open||dialog.classList.contains('is-closing'))return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){finishClose();return}
+  dialog.classList.add('is-closing');
+  closeTimer=setTimeout(finishClose,260);
+ };
+ dialog.addEventListener('animationend',e=>{if(e.target===dialog&&e.animationName==='video-out')finishClose()});
+ dialog.addEventListener('cancel',e=>{e.preventDefault();closeVideo()});
  $$('.suite-play').forEach(button=>button.addEventListener('click',()=>{
   const title=button.closest('.suite-item').querySelector('h3').textContent;
   $('#video-title').textContent=title;
@@ -181,13 +191,14 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   frame.referrerPolicy='strict-origin-when-cross-origin';
   player.replaceChildren(frame);
   dialog.querySelector('.video-external').href='https://www.youtube.com/watch?v='+encodeURIComponent(button.dataset.video);
+  dialog.classList.remove('is-closing');
   dialog.showModal();document.body.classList.add('modal-open');
  }));
- dialog.querySelector('.video-close').addEventListener('click',()=>dialog.close());
- dialog.addEventListener('close',()=>{player.replaceChildren();document.body.classList.remove('modal-open')});
+ dialog.querySelector('.video-close').addEventListener('click',closeVideo);
+ dialog.addEventListener('close',()=>{clearTimeout(closeTimer);dialog.classList.remove('is-closing');player.replaceChildren();document.body.classList.remove('modal-open')});
  dialog.addEventListener('click',e=>{
   if(e.target!==dialog)return;
   const r=dialog.getBoundingClientRect();
-  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeVideo();
  });
 })();
