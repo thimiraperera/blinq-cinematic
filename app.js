@@ -155,3 +155,14 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  addEventListener('resize',paint);
  paint();
 })();
+
+
+(function(){
+ const assistant=$('.voice-assistant'),toggle=assistant.querySelector('.voice-toggle');
+ toggle.addEventListener('click',()=>{
+  const paused=assistant.classList.toggle('is-paused');
+  toggle.setAttribute('aria-pressed',String(paused));
+  toggle.setAttribute('aria-label',paused?'Play assistant animation':'Pause assistant animation');
+ });
+ new IntersectionObserver(([entry])=>assistant.classList.toggle('is-offscreen',!entry.isIntersecting)).observe(assistant);
+})();
