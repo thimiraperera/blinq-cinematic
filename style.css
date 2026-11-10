@@ -416,3 +416,15 @@ header{position:sticky;top:0}
 .trial-form{margin:0}
 .hero-tint{background:linear-gradient(90deg,#000000cc 0,#000000b3 36%,#00000066 54%,#00000000 72%),linear-gradient(180deg,#00000026,#00000000 22%,#00000000 72%,#00000066)}
 }
+
+
+.range .section-heading{align-items:flex-end;gap:24px}
+.range .arrows{flex:none;align-items:center;gap:10px;padding-bottom:2px}
+.range .arrows button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #dedede;background:#fff;transition:background .2s,border-color .2s,color .2s}
+.range .arrows button:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+.range .arrows svg{display:block;width:21px;height:21px}
+.product-track.scroll-driven{scroll-snap-type:none;scroll-behavior:auto}
+@media(max-width:800px){
+.range .section-heading{padding-right:6.4%;gap:16px;flex-wrap:wrap}
+.range .arrows{gap:8px}
+}

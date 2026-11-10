@@ -37,7 +37,34 @@ $('.hero').addEventListener('mouseenter',()=>clearInterval(heroTimer));$('.hero'
 $('.hero').addEventListener('focusin',()=>clearInterval(heroTimer));$('.hero').addEventListener('focusout',e=>{if(!$('.hero').contains(e.relatedTarget))startHero()});
 document.addEventListener('visibilitychange',startHero);syncPause();startHero();
 
-['prev','next'].forEach((id,i)=>$('#'+id).onclick=()=>$('#product-track').scrollBy({left:(i?1:-1)*($('#product-track').clientWidth*.74),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
+(function(){
+ const section=$('#range'),track=$('#product-track'),cards=[...track.children];
+ const motion=matchMedia('(prefers-reduced-motion: reduce)');
+ let manual=false,queued=false;
+ const takeControl=()=>{manual=true;track.classList.remove('scroll-driven')};
+ const paint=()=>{
+  queued=false;
+  if(manual||motion.matches)return;
+  const progress=Math.min(1,Math.max(0,(innerHeight*.85-section.getBoundingClientRect().top)/(innerHeight*.65)));
+  track.classList.add('scroll-driven');
+  track.scrollLeft=progress*Math.min(160,track.clientWidth*.16);
+ };
+ const schedule=()=>{if(!queued&&!manual){queued=true;requestAnimationFrame(paint)}};
+ ['prev','next'].forEach((id,i)=>$('#'+id).onclick=()=>{
+  const left=track.scrollLeft;
+  const stops=cards.map(card=>card.offsetLeft-cards[0].offsetLeft);
+  const target=i?stops.find(x=>x>left+2):stops.slice().reverse().find(x=>x<left-2);
+  takeControl();
+  track.scrollTo({left:target??(i?track.scrollWidth-track.clientWidth:0),behavior:motion.matches?'instant':'smooth'});
+ });
+ track.addEventListener('pointerdown',takeControl,{passive:true});
+ track.addEventListener('focusin',takeControl);
+ track.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey)takeControl()},{passive:true});
+ addEventListener('scroll',schedule,{passive:true});
+ addEventListener('resize',schedule);
+ motion.addEventListener('change',()=>{if(motion.matches)track.classList.remove('scroll-driven');else schedule()});
+ paint();
+})();
 const details={retail:['RetailSelect','Your entire retail workflow.','Bring the everyday work of your window furnishing business into one connected system.',['Manage leads and customer records','Schedule appointments and staff','Create quotations and convert approvals into jobs','Connect supplier purchase orders, invoices and payments']],manufacturing:['ManufactureSelect','From order to production.','Connect your sales and production workflow with the tools your manufacturing team needs.',['Let dealers submit product selections and sizes','Coordinate production and material requirements','Follow work through production and dispatch','Keep dealer invoices connected to the order']],wholesale:['DealerSelect','Connect your dealer network.','Give wholesale operations a connected foundation with BlinQ’s wholesale and dealer tools.',['Give dealers a connected quoting and ordering workflow','Configure products and dealer pricing','Review orders before production and fulfilment','Keep invoices and dealer accounts together']],mobile:['BlinQ mobile app','Your quoting workflow. On site.','Bring your product and customer information to the appointment, with tools to prepare quotes while you are there.',['Capture measurements and product selections','Attach photos and job information','Create and send customer quotations','Compare the mobile app plan and full platform options']],integrations:['Connected tools','Work with the tools you know.','Explore the available integrations and confirm which options fit your account, region and workflow.',['Accounting: Xero, QuickBooks and MYOB','Payments: Stripe','Scheduling: Google Calendar','Custom connections: BlinQ OpenAPI']],widget:['iWidget','Turn your website into a showroom.','Explore an online product and quoting experience connected to BlinQ.',['Present your products, fabrics and options','Let shoppers enter width and drop','Connect online checkout to your ordering workflow','Discuss website setup and product configuration']],api:['OpenAPI','Build your next connection.','Explore custom integrations using BlinQ’s OpenAPI documentation.',['Review the available API documentation','Scope the information your integration needs','Plan authentication and access','Discuss your integration with the BlinQ team']]};
 function showDetail(key){const d=details[key];$('#detail-label').textContent=d[0];$('#detail-title').textContent=d[1];$('#detail-copy').textContent=d[2];$('#detail-list').replaceChildren(...d[3].map(t=>{const li=document.createElement('li');li.textContent=t;return li}));$('#detail-dialog').showModal();document.body.classList.add('modal-open')}
 $$('[data-detail]').forEach(b=>b.onclick=()=>showDetail(b.dataset.detail));$('.close').onclick=()=>$('#detail-dialog').close();$('#detail-dialog').addEventListener('close',()=>document.body.classList.remove('modal-open'));$('#detail-dialog').addEventListener('click',e=>{if(e.target===$('#detail-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close()}});
