@@ -538,35 +538,21 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 @media(max-width:600px){.testimonial-track{gap:16px}.testimonial-track>.testimonial-video{flex-basis:88%}.testimonial-track .testimonial-body{padding:20px}}
 
 
-.integration-hub{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr);gap:44px 6%;padding:76px 7% 58px;background:#fff;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8}
-.integration-intro{align-self:center;min-width:0}
-.integration-intro h2{font-size:clamp(36px,calc(3.2*var(--site-vw)),48px);line-height:1.1;letter-spacing:-1.5px;margin-bottom:22px}
-.integration-intro>p:not(.eyebrow){font-size:14px;line-height:1.8;color:var(--muted);max-width:320px;margin-bottom:26px}
-.integration-intro .btn{gap:18px;min-width:0}
-.integration-brand{display:flex;align-items:center;gap:14px;border-top:1px solid #eee;padding-top:24px;margin-top:32px}
-.integration-brand img{display:block;width:72px;height:auto}
-.integration-brand span{font-size:11px;color:#777;line-height:1.5}
-.integration-directory{min-width:0}
-.integration-directory-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px;font-size:12px;font-weight:550}
-.integration-directory-heading>span:last-child{font-size:11px;font-weight:400;color:#888}
-.integration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.integration-card{display:flex;flex-direction:column;min-width:0;padding:24px 19px 20px;border:1px solid #e7e7ea;border-radius:10px;background:linear-gradient(150deg,#fff,#fafafa)}
-.integration-logo{display:flex;align-items:center;gap:7px;height:32px;margin-bottom:26px}
-.integration-logo img{display:block;max-width:100%;width:auto;height:25px;object-fit:contain;object-position:left center}
-.integration-category{font-size:12px;font-weight:550;line-height:1.5;color:var(--ink)}
-.integration-card p{font-size:11px;line-height:1.6;color:#777;margin:6px 0 0}
-.integration-api{transition:border-color .2s,background .2s}
-.integration-api:hover{border-color:#d8979a;background:#fff8f8}
-.integration-api svg{width:22px;height:22px;flex:none;color:var(--red)}
-.integration-api strong{font-size:15px;font-weight:600;letter-spacing:-.5px}
-.integration-api .integration-logo>span{font-size:14px;color:#777;margin-left:auto}
-.integration-more{grid-column:1/-1;border-top:1px solid #e8e8e8;padding-top:30px}
-.integration-more-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
-.integration-more h3{font-size:19px;font-weight:550;letter-spacing:-.3px;margin:0}
-.integration-more-heading p{font-size:12px;line-height:1.6;color:#888;margin:0}
-.integration-examples{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
-.integration-examples li{display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:58px;padding:12px 8px;border-radius:8px;background:#f8f8f9;font-size:12px;font-weight:550;color:#555}
-.integration-examples img{width:22px;height:22px;object-fit:contain;flex:none}
-.integration-examples img[src$="tool-woocommerce.svg"]{width:104px;height:24px}
-@media(max-width:1100px){.integration-hub{grid-template-columns:1fr;gap:34px}.integration-intro h2 br{display:none}.integration-intro>p:not(.eyebrow){max-width:550px}.integration-brand{display:none}.integration-examples{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){.integration-hub{padding:48px 6%;gap:30px}.integration-intro h2{font-size:35px}.integration-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.integration-card{padding:20px 14px}.integration-logo{margin-bottom:20px}.integration-logo img{height:22px}.integration-directory-heading>span:last-child{display:none}.integration-more-heading{align-items:flex-start;flex-direction:column;gap:8px}.integration-examples{grid-template-columns:repeat(2,minmax(0,1fr))}.integration-more{padding-top:24px}}
+.integration-hub{padding:64px 7% 46px;background:#fff;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8}
+.integration-heading{display:flex;align-items:center;justify-content:space-between;gap:32px;margin-bottom:34px}
+.integration-heading h2{font-size:clamp(34px,calc(3.2*var(--site-vw)),46px);line-height:1.15;letter-spacing:-1.4px;margin-bottom:16px}
+.integration-heading p:not(.eyebrow){font-size:14px;line-height:1.75;color:var(--muted);margin:0}
+.integration-heading .btn{gap:24px;flex:none;min-width:0;background:#fff}
+.integration-heading .btn span{color:var(--red);font-size:17px}
+.integration-wall{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;list-style:none;margin:0;padding:1px;background:#e9e9ec;border:1px solid #e9e9ec;border-radius:12px;overflow:hidden}
+.integration-tile{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:108px;padding:22px 14px;background:#fff;font-size:16px;font-weight:550;letter-spacing:-.35px;color:#29292e;transition:background .2s}
+.integration-tile:hover{background:#fafafa}
+.integration-wordmark{display:block;width:auto;max-width:128px;max-height:32px;height:auto;object-fit:contain}
+.integration-symbol{display:block;flex:none;width:25px;height:25px;object-fit:contain}
+.integration-asterisk{position:absolute;top:12px;right:14px;font-size:12px;font-weight:400;color:#a4a4ab}
+.integration-api{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);min-height:44px}
+.integration-api svg{width:22px;height:22px;color:var(--red);flex:none}
+.integration-api .integration-arrow{font-size:13px;color:#888;margin-left:3px}
+.integration-note{font-size:11px;line-height:1.6;color:#888;margin:14px 0 0;text-align:right}
+@media(max-width:1100px){.integration-wall{grid-template-columns:repeat(4,minmax(0,1fr))}.integration-tile{min-height:100px}}
+@media(max-width:650px){.integration-hub{padding:46px 6% 34px}.integration-heading{align-items:flex-start;flex-direction:column;gap:22px;margin-bottom:28px}.integration-heading h2{font-size:34px}.integration-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.integration-tile{min-height:92px;font-size:15px;padding:20px 12px}.integration-wordmark{max-width:112px;max-height:28px}.integration-symbol{width:23px;height:23px}.integration-note{text-align:left}}
