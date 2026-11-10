@@ -452,11 +452,11 @@ header{position:sticky;top:0}
 
 
 .suite-item{position:relative;--icon-ink:#b44d54;--icon-bg:#faf0f0}
-.suite-item:nth-child(2){--icon-ink:#5275a3;--icon-bg:#eff4fa}
-.suite-item:nth-child(3){--icon-ink:#a07a37;--icon-bg:#faf5eb}
-.suite-item:nth-child(4){--icon-ink:#528776;--icon-bg:#eef6f2}
-.suite-item:nth-child(5){--icon-ink:#8270a4;--icon-bg:#f4f1f8}
-.suite-item:nth-child(6){--icon-ink:#567f89;--icon-bg:#eef5f6}
+.suite-item:nth-child(2),#pricing .pricing-card:nth-child(2){--icon-ink:#5275a3;--icon-bg:#eff4fa}
+.suite-item:nth-child(3),#pricing .pricing-card:nth-child(3){--icon-ink:#a07a37;--icon-bg:#faf5eb}
+.suite-item:nth-child(4),#pricing .pricing-card:nth-child(4){--icon-ink:#528776;--icon-bg:#eef6f2}
+.suite-item:nth-child(5),#pricing .pricing-card:nth-child(5){--icon-ink:#8270a4;--icon-bg:#f4f1f8}
+.suite-item:nth-child(6),#pricing .pricing-card:nth-child(6){--icon-ink:#567f89;--icon-bg:#eef5f6}
 .suite-icon{display:grid;place-items:center;width:60px;height:60px;border-radius:14px;background:var(--icon-bg)}
 .suite-icon svg{width:33.6px;height:33.6px;color:var(--icon-ink)}
 .suite-icon svg>:first-child{fill:currentColor;fill-opacity:.1}
@@ -556,3 +556,9 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .integration-note{font-size:11px;line-height:1.6;color:#888;margin:14px 0 0;text-align:right}
 @media(max-width:1100px){.integration-wall{grid-template-columns:repeat(4,minmax(0,1fr))}.integration-tile{min-height:100px}}
 @media(max-width:650px){.integration-hub{padding:46px 6% 34px}.integration-heading{align-items:flex-start;flex-direction:column;gap:22px;margin-bottom:28px}.integration-heading h2{font-size:34px}.integration-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.integration-tile{min-height:92px;font-size:15px;padding:20px 12px}.integration-wordmark{max-width:112px;max-height:28px}.integration-symbol{width:23px;height:23px}.integration-note{text-align:left}}
+
+
+#pricing .pricing-card{--icon-ink:#b44d54;--icon-bg:#faf0f0}
+#pricing .pricing-icon{display:grid;place-items:center;width:60px;height:60px;border-radius:14px;background:var(--icon-bg);color:var(--icon-ink)}
+#pricing .pricing-icon svg{display:block;width:30.8px;height:30.8px}
+#pricing .pricing-icon svg>:first-child{fill:currentColor;fill-opacity:.1}
