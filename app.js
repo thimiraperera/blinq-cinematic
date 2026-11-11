@@ -285,3 +285,54 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   window.addEventListener('scroll',updateHeader,{passive:true});
   updateHeader();
 })();
+
+/* Booking popup. BlinQ's Calendly scheduling runs inside it, so bookings land in BlinQ's real
+   calendars. Every link to Calendly or the old call-back page opens this popup instead. */
+(function(){
+ const dialog=$('#booking-dialog');if(!dialog)return;
+ const steps=[...dialog.querySelectorAll('.booking-step')],marks=[...dialog.querySelectorAll('.booking-steps li')];
+ const box=dialog.querySelector('.booking-frame'),loading=box.querySelector('.booking-loading');
+ const show=n=>{
+  steps.forEach(s=>s.hidden=+s.dataset.step!==n);
+  marks.forEach((m,i)=>{m.classList.toggle('is-current',i===n-1);m.classList.toggle('is-done',i<n-1)});
+ };
+ const clearFrame=()=>{box.querySelector('iframe')?.remove()};
+ const label=(mins,training)=>{dialog.querySelector('.booking-duration').textContent=mins+' minutes';dialog.querySelector('#booking-title').textContent=training?'Book a training session':'Book a personalised demo'};
+ const region=()=>{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';return tz.startsWith('Europe/')?'uk':tz.startsWith('America/')?'us':'au'};
+ const open=()=>{
+  closeMenus();
+  $$('dialog[open]').forEach(d=>{if(d!==dialog)d.close()});
+  clearFrame();show(1);label(30);
+  dialog.querySelectorAll('.booking-option').forEach(b=>b.classList.toggle('is-suggested',b.dataset.region===region()));
+  const call={au:['+61388444864','+61 3 8844 4864'],uk:['+441173257254','+44 117 325 7254'],us:['+13237458257','+1 323 745 8257']}[region()],tel=dialog.querySelector('.booking-call a');
+  tel.href='tel:'+call[0];tel.textContent=call[1];
+  if(!dialog.open)dialog.showModal();
+  document.body.classList.add('modal-open');
+  (dialog.querySelector('.booking-option.is-suggested')||dialog.querySelector('.booking-option')).focus();
+ };
+ const choose=button=>{
+  label(button.dataset.duration,button.dataset.region==='training');
+  clearFrame();loading.hidden=false;
+  const frame=document.createElement('iframe');
+  frame.title='Choose a time with the BlinQ team';
+  frame.src='https://calendly.com/blinq/'+button.dataset.slug+'?'+new URLSearchParams({embed_domain:location.host||'blinq.com.au',embed_type:'Inline',hide_gdpr_banner:'1',hide_event_type_details:'1',hide_landing_page_details:'1',primary_color:'de161d',text_color:'0c0c0e',background_color:'ffffff'});
+  frame.addEventListener('load',()=>{loading.hidden=true});
+  box.append(frame);show(2);
+ };
+ dialog.querySelectorAll('[data-slug]').forEach(b=>b.addEventListener('click',()=>choose(b)));
+ dialog.querySelector('.booking-back').addEventListener('click',()=>{clearFrame();label(30);show(1)});
+ dialog.querySelector('.booking-close').addEventListener('click',()=>dialog.close());
+ dialog.querySelector('.booking-finish').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('close',()=>{clearFrame();document.body.classList.remove('modal-open')});
+ dialog.addEventListener('click',e=>{
+  if(e.target!==dialog)return;
+  const r=dialog.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();
+ });
+ addEventListener('message',e=>{if(e.origin==='https://calendly.com'&&e.data&&e.data.event==='calendly.event_scheduled')show(3)});
+ document.addEventListener('click',e=>{
+  const link=e.target.closest('a[href*="calendly.com/blinq"],a[href*="/call-back/"]');
+  if(!link||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;
+  e.preventDefault();open();
+ });
+})();
