@@ -139,22 +139,6 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  moments.forEach(m=>io.observe(m));
 })();
 
-/* Scrolling pushes the hero zoom further, and the headline drifts up and fades */
-(function(){
- if(reducedMotion)return;
- const wrap=$('.hero-wrap'),media=$('#hero-media'),copy=$('.hero-copy');
- let queued=false;
- const paint=()=>{
-  queued=false;
-  const p=Math.min(1,Math.max(0,scrollY/(wrap.offsetHeight*.7)));
-  media.style.setProperty('--zoom',(1+p*.6).toFixed(4));
-  copy.style.opacity=Math.max(0,1-p*1.5).toFixed(3);copy.style.pointerEvents=p>.6?'none':'';
-  copy.style.transform=`translateY(${(p*-70).toFixed(1)}px)`;
- };
- addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(paint)}},{passive:true});
- addEventListener('resize',paint);
- paint();
-})();
 
 
 (function(){

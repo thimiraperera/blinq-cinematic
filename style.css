@@ -239,18 +239,16 @@ header{position:sticky;top:0}
 @media(max-width:420px){.flip{font-size:32px}.friction-list li{font-size:16px}}
 @media(prefers-reduced-motion:reduce){
 .hero-copy>*,.flip .flap-out,.flip .flap-in{animation:none}
-.hero-wrap::after{display:none!important}
 .hero{position:relative;top:auto}
 .stage-shot img{transform:none}
 .friction-list li,.friction-list .cut span::after,.friction-list .keep::before,.friction-result{transition:none}
 }
 
 /* Hero motion: each photo fades over the last while slowly zooming toward the
-   person, and scrolling pushes the zoom further (--zoom is set in app.js). */
+   person. */
 @property --kb{syntax:'<number>';inherits:false;initial-value:1}
-.hero{position:sticky;top:72px}
 .hero-media{position:absolute;inset:0;z-index:0;overflow:hidden;background:#0c0c0e}
-.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;opacity:0;transform:scale(calc(var(--zoom,1)*var(--kb)));transform-origin:var(--focus,50% 40%);transition:opacity 1.2s ease;will-change:transform,opacity}
+.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;opacity:0;transform:scale(var(--kb));transform-origin:var(--focus,50% 40%);transition:opacity 1.2s ease;will-change:transform,opacity}
 .hero-media img.is-active,.hero-media img.is-leaving{animation:hero-kb 10s ease-out both}
 .hero-media img.is-active{z-index:2;opacity:1}
 .hero-media img.is-leaving{z-index:1;opacity:1;transition:none}
@@ -321,7 +319,6 @@ header{position:sticky;top:0}
 .closing>div{grid-template-columns:1fr;gap:32px;padding:56px 6%}
 }
 @media(max-width:800px){
-.hero{top:64px}
 .trust{padding:36px 0 40px}
 .trust-set{gap:40px;padding-right:40px}
 .trust-set img{height:28px}
@@ -349,7 +346,7 @@ header{position:sticky;top:0}
 .hero .hero-demo:hover{color:#fff;text-decoration-color:var(--red-on-dark)}
 .hero .trial-terms,.hero .hero-demo{text-shadow:0 1px 10px #00000080}
 /* Pin the photo briefly so the scroll zoom can be seen, on screens the hero fills */
-@media(max-height:1072px){.hero-wrap::after{content:'';display:block;height:260px}}
+
 
 @media(max-width:800px){
 }
