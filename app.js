@@ -294,3 +294,10 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
     if(motion.matches)states.forEach(state=>animate(state,state.target));
   });
 })();
+
+(() => {
+  const header=document.querySelector('header');
+  const updateHeader=()=>header.classList.toggle('is-scrolled',window.scrollY>8);
+  window.addEventListener('scroll',updateHeader,{passive:true});
+  updateHeader();
+})();

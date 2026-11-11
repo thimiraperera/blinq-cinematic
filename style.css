@@ -592,10 +592,14 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 #pricing .pricing-billing .pricing-total{color:var(--red);font-weight:700;font-variant-numeric:tabular-nums}
 
 @media(min-width:1440px){
- header{padding-inline:calc((100% - var(--site-max-width))/2 + 43.2px)}
  .mega{padding-inline:calc((100% - var(--site-max-width))/2 + 100.8px)}
  footer{padding-inline:calc((100% - var(--site-max-width))/2 + 100.8px)}
  .hero{padding-inline:calc((100% - var(--site-max-width))/2 + 100.8px)}
  .hero-bottom{left:calc((100% - var(--site-max-width))/2 + 57.6px);right:calc((100% - var(--site-max-width))/2 + 57.6px)}
  .closing>div{max-width:var(--site-max-width);margin-inline:auto;padding-inline:100.8px}
 }
+
+header{padding:0;transition:box-shadow .2s ease}
+.header-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:var(--site-max-width);height:100%;margin-inline:auto;padding-inline:min(3vw,43.2px)}
+header.is-scrolled{box-shadow:0 3px 14px rgb(0 0 0 / 8%)}
+@media(max-width:800px){.header-inner{padding-inline:5vw}}
