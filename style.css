@@ -562,3 +562,6 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 #pricing .pricing-icon img{position:absolute;display:block;max-width:none;width:300%;height:200%;left:var(--icon-x);top:var(--icon-y)}
 
 #pricing .pricing-intro{max-width:680px;margin-inline:0}
+
+.mobile-copy{container-type:inline-size}
+.mobile-copy h2{text-wrap:balance;font-size:clamp(28px,9.4cqi,46px)}
