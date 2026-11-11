@@ -561,4 +561,4 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 #pricing .pricing-icon{position:relative;width:59.4px;height:59.4px;overflow:hidden;border-radius:8px;background:transparent}
 #pricing .pricing-icon img{position:absolute;display:block;max-width:none;width:300%;height:200%;left:var(--icon-x);top:var(--icon-y)}
 
-#pricing .pricing-intro{max-width:680px;margin-inline:auto}
+#pricing .pricing-intro{max-width:680px;margin-inline:0}
