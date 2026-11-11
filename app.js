@@ -188,7 +188,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   $('#video-title').textContent=title;
   const frame=document.createElement('iframe');
   frame.src='https://www.youtube.com/embed/'+encodeURIComponent(button.dataset.video)+'?autoplay=1&rel=0';
-  frame.title=title+' — BlinQ video';
+  frame.title=title+' | BlinQ video';
   frame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
   frame.allowFullscreen=true;
   frame.referrerPolicy='strict-origin-when-cross-origin';
