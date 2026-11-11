@@ -242,13 +242,55 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  measure();requestAnimationFrame(tick);
 })();
 
-$$('.pricing-users').forEach(select=>{
-  const billing=select.closest('.pricing-card').querySelector('.pricing-billing');
-  const update=()=>{
-    const option=select.selectedOptions[0];
-    const total=Number(option.dataset.total).toLocaleString('en-AU');
-    billing.innerHTML=`<strong>${option.value}</strong> licences for <strong>A$${total}</strong>,<br>billed monthly`;
+(() => {
+  const motion=matchMedia('(prefers-reduced-motion: reduce)');
+  const states=new Map();
+  const format=value=>'A$'+Math.round(value).toLocaleString('en-AU');
+  const animate=(state,target,from=state.value)=>{
+    cancelAnimationFrame(state.frame);
+    state.target=target;
+    state.accessible.textContent=format(target);
+    const finish=()=>{state.value=target;state.price.textContent=format(target)};
+    if(motion.matches){finish();return}
+    const start=performance.now();
+    const tick=now=>{
+      const progress=Math.min((now-start)/650,1);
+      state.value=from+(target-from)*(1-Math.pow(1-progress,3));
+      state.price.textContent=format(state.value);
+      if(progress<1)state.frame=requestAnimationFrame(tick);
+      else finish();
+    };
+    state.frame=requestAnimationFrame(tick);
   };
-  select.addEventListener('change',update);
-  update();
-});
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const state=states.get(entry.target);
+    animate(state,state.target,0);
+    observer.unobserve(entry.target);
+  }),{threshold:.6});
+  $$('.pricing-billing').forEach(billing=>{
+    const price=billing.querySelector('.pricing-total');
+    const target=Number(price.dataset.total);
+    const accessible=document.createElement('span');
+    accessible.className='sr-only';accessible.textContent=format(target);
+    price.setAttribute('aria-hidden','true');price.after(accessible);
+    const state={price,accessible,value:target,target,frame:0};
+    states.set(billing,state);observer.observe(billing);
+    const select=billing.closest('.pricing-card').querySelector('.pricing-users');
+    if(!select)return;
+    const update=()=>{
+      observer.unobserve(billing);
+      const option=select.selectedOptions[0];
+      billing.querySelector('strong').textContent=option.value;
+      animate(state,Number(option.dataset.total));
+    };
+    select.addEventListener('change',update);
+    const option=select.selectedOptions[0];
+    billing.querySelector('strong').textContent=option.value;
+    state.value=state.target=Number(option.dataset.total);
+    price.textContent=accessible.textContent=format(state.target);
+  });
+  motion.addEventListener('change',()=>{
+    if(motion.matches)states.forEach(state=>animate(state,state.target));
+  });
+})();

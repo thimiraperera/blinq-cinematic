@@ -591,3 +591,5 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 #pricing .feature-no{color:#999}
 #pricing :is(summary,select,.pricing-table-scroll):focus-visible{outline:2px solid var(--red);outline-offset:4px}
 @media(max-width:600px){#pricing .pricing-comparison summary{font-size:18px}#pricing th:first-child{min-width:150px;max-width:160px}#pricing th,#pricing td{padding:14px 10px}}
+
+#pricing .pricing-billing .pricing-total{color:var(--red);font-weight:700;font-variant-numeric:tabular-nums}
