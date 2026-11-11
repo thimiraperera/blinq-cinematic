@@ -565,3 +565,29 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 
 .mobile-copy{container-type:inline-size}
 .mobile-copy h2{text-wrap:balance;font-size:clamp(28px,9.4cqi,46px)}
+#pricing .pricing-terms{font-size:13px;color:var(--ink);margin:18px 0 0}
+#pricing .pricing-card{position:relative}
+#pricing .pricing-popular{position:absolute;right:0;top:28px;border-radius:20px;background:#fbe9ea;color:#b91520;padding:7px 12px;font-size:11px;font-weight:600}
+#pricing .pricing-users{font:inherit;font-weight:600;color:var(--ink);background:#fff;border:1px solid #d5d5d5;border-radius:5px;padding:8px 26px 8px 10px;cursor:pointer}
+#pricing .pricing-minimum{min-height:64px}
+#pricing .pricing-minimum small{font-size:11px}
+#pricing .pricing-features{list-style:none;padding:0;margin:0 0 28px;font-size:13px;line-height:1.6;color:var(--muted)}
+#pricing .pricing-features li{position:relative;padding-left:20px;margin:9px 0}
+#pricing .pricing-features li::before{content:'\2713';position:absolute;left:0;color:var(--red)}
+#pricing .pricing-comparison{margin:42px 0 30px;border-top:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9}
+#pricing .pricing-comparison summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0;font-size:20px;font-weight:550;cursor:pointer;list-style:none}
+#pricing .pricing-comparison summary::-webkit-details-marker{display:none}
+#pricing .pricing-comparison summary span{font-size:28px;font-weight:400;transition:transform .2s}
+#pricing .pricing-comparison[open] summary span{transform:rotate(45deg)}
+#pricing .pricing-comparison>p{font-size:14px;margin:0 0 24px;color:var(--muted)}
+#pricing .pricing-table-scroll{overflow:auto;max-height:620px;margin-bottom:24px;isolation:isolate}
+#pricing table{width:100%;min-width:780px;border-collapse:separate;border-spacing:0;font-size:13px;text-align:center}
+#pricing th,#pricing td{padding:16px 14px;border-bottom:1px solid #e3e3e3}
+#pricing thead th{position:sticky;top:0;z-index:2;background:#ececec;font-weight:600}
+#pricing tbody th{font-weight:400;text-align:left;background:#f7f7f7}
+#pricing th:first-child{position:sticky;left:0;min-width:210px;max-width:270px;text-align:left}
+#pricing thead th:first-child{z-index:3}
+#pricing .feature-yes{color:#c31c28;font-size:18px}
+#pricing .feature-no{color:#999}
+#pricing :is(summary,select,.pricing-table-scroll):focus-visible{outline:2px solid var(--red);outline-offset:4px}
+@media(max-width:600px){#pricing .pricing-comparison summary{font-size:18px}#pricing th:first-child{min-width:150px;max-width:160px}#pricing th,#pricing td{padding:14px 10px}}

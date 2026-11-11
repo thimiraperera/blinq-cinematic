@@ -241,3 +241,14 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  new IntersectionObserver(([entry])=>visible=entry.isIntersecting).observe(carousel);
  measure();requestAnimationFrame(tick);
 })();
+
+$$('.pricing-users').forEach(select=>{
+  const billing=select.closest('.pricing-card').querySelector('.pricing-billing');
+  const update=()=>{
+    const option=select.selectedOptions[0];
+    const total=Number(option.dataset.total).toLocaleString('en-AU');
+    billing.innerHTML=`<strong>${option.value}</strong> licences for <strong>A$${total}</strong>,<br>billed monthly`;
+  };
+  select.addEventListener('change',update);
+  update();
+});
