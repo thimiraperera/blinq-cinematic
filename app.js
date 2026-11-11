@@ -154,16 +154,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
 
 (function(){
  const dialog=$('#video-dialog'),player=dialog.querySelector('.video-player');
- let closeTimer;
- const finishClose=()=>{clearTimeout(closeTimer);player.replaceChildren();if(dialog.open)dialog.close();document.body.classList.remove('modal-open')};
- const closeVideo=()=>{
-  if(!dialog.open||dialog.classList.contains('is-closing'))return;
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){finishClose();return}
-  dialog.classList.add('is-closing');
-  closeTimer=setTimeout(finishClose,260);
- };
- dialog.addEventListener('animationend',e=>{if(e.target===dialog&&e.animationName==='video-out')finishClose()});
- dialog.addEventListener('cancel',e=>{e.preventDefault();closeVideo()});
+ const closeVideo=()=>dialog.close();
  document.addEventListener('click',e=>{
   const button=e.target.closest('[data-video]');
   if(!button)return;
@@ -178,10 +169,9 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   frame.referrerPolicy='strict-origin-when-cross-origin';
   player.replaceChildren(frame);
   dialog.querySelector('.video-external').href='https://www.youtube.com/watch?v='+encodeURIComponent(button.dataset.video);
-  dialog.classList.remove('is-closing');
   dialog.showModal();document.body.classList.add('modal-open'); });
  dialog.querySelector('.video-close').addEventListener('click',closeVideo);
- dialog.addEventListener('close',()=>{clearTimeout(closeTimer);dialog.classList.remove('is-closing');player.replaceChildren();document.body.classList.remove('modal-open')});
+ dialog.addEventListener('close',()=>{player.replaceChildren();document.body.classList.remove('modal-open')});
  dialog.addEventListener('click',e=>{
   if(e.target!==dialog)return;
   const r=dialog.getBoundingClientRect();
@@ -306,7 +296,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   dialog.querySelectorAll('.booking-option').forEach(b=>b.classList.toggle('is-suggested',b.dataset.region===region()));
   const call={au:['+61388444864','+61 3 8844 4864'],uk:['+441173257254','+44 117 325 7254'],us:['+13237458257','+1 323 745 8257']}[region()],tel=dialog.querySelector('.booking-call a');
   tel.href='tel:'+call[0];tel.textContent=call[1];
-  if(!dialog.open)dialog.showModal();
+  dialog.showModal();
   document.body.classList.add('modal-open');
   (dialog.querySelector('.booking-option.is-suggested')||dialog.querySelector('.booking-option')).focus();
  };
@@ -334,5 +324,76 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   const link=e.target.closest('a[href*="calendly.com/blinq"],a[href*="/call-back/"]');
   if(!link||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;
   e.preventDefault();open();
+ });
+})();
+
+/* Popup motion, shared by every dialog on the page.
+   A popup grows out of the spot that was pressed to open it, its content settles in just after,
+   and it shrinks back toward that spot when it closes. Every move starts from where the popup is
+   on screen right now, so closing it halfway through opening, or reopening it while it closes,
+   never jumps. On phones the full-screen booking sheet slides up from the bottom instead. */
+(function(){
+ if(!window.HTMLDialogElement||!Element.prototype.animate)return;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)'),phone=matchMedia('(max-width:860px)');
+ const nativeShow=HTMLDialogElement.prototype.showModal,nativeClose=HTMLDialogElement.prototype.close;
+ const SHOWN={opacity:1,transform:'none'},live=new WeakMap();
+ let press=null;
+ addEventListener('pointerdown',e=>{press={x:e.clientX,y:e.clientY,t:performance.now()}},true);
+ addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')press=null},true);
+ const isSheet=d=>d.id==='booking-dialog'&&phone.matches;
+ const hidden=d=>reduce.matches?{opacity:0,transform:'none'}:isSheet(d)?{opacity:1,transform:'translateY(100%)'}:{opacity:0,transform:'translateY(10px) scale(.92)'};
+ const timing=(d,opening)=>reduce.matches?{duration:opening?200:160,easing:'ease'}
+  :opening?{duration:isSheet(d)?520:460,easing:isSheet(d)?'cubic-bezier(.32,.72,0,1)':'cubic-bezier(.2,.9,.25,1)'}
+  :{duration:isSheet(d)?300:220,easing:'cubic-bezier(.4,0,.8,.3)'};
+ const now=d=>{
+  const box=getComputedStyle(d);let shade=NaN;
+  try{shade=parseFloat(getComputedStyle(d,'::backdrop').opacity)}catch(e){}
+  return {box:{opacity:box.opacity,transform:box.transform},shade};
+ };
+ const move=(d,from,to,shadeFrom,shadeTo,time)=>{
+  (live.get(d)||[]).forEach(a=>a.cancel());
+  const anims=[d.animate([from,to],{...time,fill:'both'})];
+  try{anims.push(d.animate([{opacity:shadeFrom},{opacity:shadeTo}],{duration:time.duration,easing:'ease',fill:'both',pseudoElement:'::backdrop'}))}catch(e){}
+  live.set(d,anims);
+  return anims[0];
+ };
+ const settle=d=>{
+  if(reduce.matches)return;
+  let parts=[...d.children];
+  if(parts.length===1)parts=[...parts[0].children];
+  parts.forEach((part,i)=>part.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],
+   {duration:420,delay:70+Math.min(i,5)*45,easing:'cubic-bezier(.2,.9,.25,1)',fill:'backwards'}));
+ };
+ function open(){
+  const d=this;
+  if(d.open&&!d.classList.contains('is-closing'))return;
+  if(d.open){
+   const at=now(d);d.classList.remove('is-closing');
+   move(d,at.box,SHOWN,isNaN(at.shade)?0:at.shade,1,timing(d,true));
+   return;
+  }
+  nativeShow.call(d);
+  d.style.transformOrigin='';
+  if(!isSheet(d)){
+   const r=d.getBoundingClientRect(),p=press&&performance.now()-press.t<1500?press:null;
+   const clamp=(v,size)=>Math.round(Math.min(Math.max(v,-.3*size),1.3*size));
+   d.style.transformOrigin=p?`${clamp(p.x-r.left,r.width)}px ${clamp(p.y-r.top,r.height)}px`:'50% 65%';
+  }
+  move(d,hidden(d),SHOWN,0,1,timing(d,true));
+  settle(d);
+ }
+ function close(value){
+  const d=this;
+  if(!d.open||d.classList.contains('is-closing'))return;
+  const at=now(d);d.classList.add('is-closing');
+  const time=timing(d,false),anim=move(d,at.box,hidden(d),isNaN(at.shade)?1:at.shade,0,time);
+  const done=()=>{if(d.open&&live.get(d)?.[0]===anim)nativeClose.call(d,value)};
+  anim.finished.then(done,()=>{});
+  setTimeout(done,time.duration+500);
+ }
+ $$('dialog').forEach(d=>{
+  d.showModal=open;d.close=close;
+  d.addEventListener('cancel',e=>{e.preventDefault();d.close()});
+  d.addEventListener('close',()=>{(live.get(d)||[]).forEach(a=>a.cancel());live.delete(d);d.classList.remove('is-closing')});
  });
 })();
