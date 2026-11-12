@@ -724,3 +724,71 @@ dialog.is-closing{pointer-events:none}
 .email-hint.is-waiting .email-hint-caret{animation:caret-blink 1s steps(1) infinite}
 @keyframes caret-blink{50%{opacity:0}}
 @media(max-width:420px){.trial-card .email-hint{padding:0 4px;font-size:13px}}
+
+/* Header: Log in matches the navigation links */
+.utilities{font-size:14px}
+.utilities .login{padding:10px 18px;border-radius:4px;transition:background .15s}
+.utilities .login:hover{background:#f2f2f2}
+
+/* Mega menus: more room to breathe, a clean white panel and a soft shadow that is never cut off.
+   app.js fades and slides them in and out. */
+@media(min-width:801px){
+.mega-float{overflow:visible;max-height:none;padding:14px 24px 0}
+.res-panel{gap:64px;padding:46px 56px 50px;border-radius:18px;background:#fff;box-shadow:0 0 0 1px #0c0c0e12,0 2px 6px #0c0c0e0d,0 18px 40px -14px #0c0c0e38,0 40px 80px -32px #0c0c0e4d;max-height:calc(100svh - 118px);overflow:auto;animation:none}
+.res-heading{margin:0 0 14px;color:#86868b;font-size:13px;font-weight:500}
+.res-pair{gap:32px}
+.res-col li+li{margin-top:6px}
+.res-col a{gap:14px;padding:10px 12px;margin-left:-12px;border-radius:10px;font-size:15px;font-weight:450;line-height:1.35}
+.res-col a svg{width:19px;height:19px;color:#77777c;transition:color .15s}
+.res-col a:hover{background:#f4f4f5}
+}
+@media(min-width:801px) and (max-width:1180px){.res-panel{gap:40px;padding:38px 40px 42px}.res-pair{gap:24px}}
+@media(min-width:801px) and (max-width:1020px){.res-panel{grid-template-columns:repeat(3,minmax(0,1fr))}.res-pair{grid-template-columns:1fr;gap:0}.res-pair ul+ul{margin-top:6px}}
+@media(max-width:800px){
+.mega-resources-mobile ul{gap:6px 18px}
+.mega-resources-mobile a{gap:12px;padding:10px 6px}
+.mega-resources-mobile .res-heading{margin-bottom:12px}
+.mega-links{gap:14px 26px}
+}
+.mega.is-closing,.mega.is-closing .res-panel,#shade.is-closing{pointer-events:none}
+
+/* Five steps: an icon for each, in the platform section's colours lifted for the dark background */
+.friction-steps{gap:36px;margin-top:84px;padding-top:0;border-top:0}
+.friction-steps>div{position:relative;--step-ink:#ef9399;--step-bg:#b44d542e;--step-ring:#ef93994d}
+.friction-steps>div:nth-child(2){--step-ink:#97b8e3;--step-bg:#5275a333;--step-ring:#97b8e34d}
+.friction-steps>div:nth-child(3){--step-ink:#dfbd7f;--step-bg:#a07a3733;--step-ring:#dfbd7f4d}
+.friction-steps>div:nth-child(4){--step-ink:#92ccb8;--step-bg:#52877633;--step-ring:#92ccb84d}
+.friction-steps>div:nth-child(5){--step-ink:#bcaee0;--step-bg:#8270a43d;--step-ring:#bcaee04d}
+.step-head{position:relative;margin-bottom:22px}
+.step-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:14px;background:var(--step-bg);box-shadow:inset 0 0 0 1px var(--step-ring);color:var(--step-ink)}
+.step-icon svg{width:28px;height:28px}
+.step-icon .f{fill:currentColor;fill-opacity:.18}
+.step-icon .dot{fill:currentColor}
+.friction-steps>div:not(:last-child) .step-head::after{content:'';position:absolute;top:28px;left:72px;right:-20px;height:1px;background:linear-gradient(90deg,var(--step-ring),#ffffff14);transform-origin:0 50%}
+.friction-steps b{display:block;margin:0 0 6px;color:var(--step-ink);font-size:13px;font-weight:600;letter-spacing:.3px;line-height:1.2}
+.js .friction-steps .step-icon{opacity:0;transform:translateY(10px) scale(.9);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.9,.25,1)}
+.js .friction-steps .step-head::after{transform:scaleX(0);transition:transform .7s cubic-bezier(.4,0,.2,1) .25s}
+.friction-steps>div:nth-child(2) .step-icon{transition-delay:.1s}
+.friction-steps>div:nth-child(3) .step-icon{transition-delay:.2s}
+.friction-steps>div:nth-child(4) .step-icon{transition-delay:.3s}
+.friction-steps>div:nth-child(5) .step-icon{transition-delay:.4s}
+.friction-steps>div:nth-child(2) .step-head::after{transition-delay:.35s}
+.friction-steps>div:nth-child(3) .step-head::after{transition-delay:.45s}
+.friction-steps>div:nth-child(4) .step-head::after{transition-delay:.55s}
+.friction-steps.in-view .step-icon{opacity:1;transform:none}
+.friction-steps.in-view .step-head::after{transform:none}
+@media(max-width:900px){.friction-steps{gap:40px 24px}.friction-steps .step-head::after{display:none}}
+@media(max-width:420px){.step-icon{width:48px;height:48px;border-radius:12px}.step-icon svg{width:24px;height:24px}}
+@media(prefers-reduced-motion:reduce){.js .friction-steps .step-icon,.js .friction-steps .step-head::after{opacity:1;transform:none;transition:none}}
+
+/* Carousels you can grab: rows follow the mouse, the hero and the logo strip follow mouse and touch */
+.hero,.trust-view.is-js{touch-action:pan-y pinch-zoom}
+.trust-view.is-js{overflow:hidden}
+.trust-view.is-js .trust-track{animation:none;will-change:transform}
+@media(hover:hover) and (pointer:fine){
+.product-track,.testimonial-track,.trust-view.is-js,.hero{cursor:grab}
+.hero-copy,.hero-bottom{cursor:auto}
+}
+.is-dragging,.is-dragging *{cursor:grabbing!important;-webkit-user-select:none;user-select:none}
+.product-track.is-dragging,.product-track.is-gliding{scroll-snap-type:none;scroll-behavior:auto}
+.product-track img,.testimonial-track img,.trust-view img{-webkit-user-drag:none}

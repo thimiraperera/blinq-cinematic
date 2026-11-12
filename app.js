@@ -1,8 +1,56 @@
 document.documentElement.classList.add('js');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-function closeMenus(){$$('.mega').forEach(x=>x.hidden=true);$$('[data-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));$('#shade').hidden=true;$('#mobile-menu').setAttribute('aria-expanded','false')}
-$$('[data-menu]').forEach(b=>b.onclick=()=>{const open=$('#'+b.dataset.menu).hidden;closeMenus();if(open){$('#'+b.dataset.menu).hidden=false;$('#shade').hidden=false;b.setAttribute('aria-expanded','true')}});
-$('#mobile-menu').onclick=()=>{const open=$('#solutions').hidden;closeMenus();if(open){$('#solutions').hidden=false;$('#shade').hidden=false;$('#mobile-menu').setAttribute('aria-expanded','true')}};$('#shade').onclick=closeMenus;$$('.mega a').forEach(a=>a.addEventListener('click',closeMenus));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenus()});
+/* Menus fade and slide into place under the header, and back out when they close. Every move
+   starts from where the menu is on screen, so quick clicks between menus never jump. */
+const menuReduce=matchMedia('(prefers-reduced-motion: reduce)'),menuPhone=matchMedia('(max-width:800px)'),menuMoves=new WeakMap();
+const menuIsOpen=m=>!m.hidden&&!m.classList.contains('is-closing');
+const menuSurface=m=>menuPhone.matches?m:m.querySelector('.res-panel')||m;
+const menuHidden=()=>({opacity:0,transform:menuReduce.matches?'none':'translateY(-10px) scale(.985)'});
+const menuNow=el=>{const c=getComputedStyle(el);return {opacity:c.opacity,transform:c.transform}};
+function menuMove(el,from,to,time,done){
+ menuMoves.get(el)?.cancel();
+ const a=el.animate([from,to],{...time,fill:'both'});menuMoves.set(el,a);
+ if(done){const finish=()=>{if(menuMoves.get(el)===a){menuMoves.delete(el);a.cancel();done()}};a.finished.then(finish,()=>{});setTimeout(finish,time.duration+400)}
+}
+function shadeTo(show){
+ const shade=$('#shade'),closing=shade.classList.contains('is-closing');
+ if(show){
+  if(!shade.hidden&&!closing)return;
+  const from={opacity:shade.hidden?0:getComputedStyle(shade).opacity};
+  shade.hidden=false;shade.classList.remove('is-closing');
+  menuMove(shade,from,{opacity:1},{duration:220,easing:'ease'});
+ }else if(!shade.hidden&&!closing){
+  shade.classList.add('is-closing');
+  menuMove(shade,{opacity:getComputedStyle(shade).opacity},{opacity:0},{duration:200,easing:'ease'},()=>{shade.hidden=true;shade.classList.remove('is-closing')});
+ }
+}
+function hideMenu(m,quick){
+ if(!menuIsOpen(m))return;
+ m.classList.add('is-closing');
+ const el=menuSurface(m);
+ menuMove(el,menuNow(el),menuHidden(),{duration:quick?120:190,easing:'cubic-bezier(.4,0,1,1)'},()=>{m.hidden=true;m.classList.remove('is-closing')});
+}
+function showMenu(m){
+ const fresh=m.hidden,el=menuSurface(m);
+ m.hidden=false;m.classList.remove('is-closing');
+ menuMove(el,fresh?menuHidden():menuNow(el),{opacity:1,transform:'none'},{duration:menuReduce.matches?160:320,easing:'cubic-bezier(.2,.9,.25,1)'});
+ if(fresh&&el!==m&&!menuReduce.matches)[...el.children].forEach((col,i)=>col.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:360,delay:60+i*45,easing:'cubic-bezier(.2,.9,.25,1)',fill:'backwards'}));
+ shadeTo(true);
+}
+function closeMenus(){
+ $$('.mega').forEach(m=>hideMenu(m));
+ $$('[data-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));$('#mobile-menu').setAttribute('aria-expanded','false');
+ shadeTo(false);
+}
+function toggleMenu(menu,trigger){
+ const opening=!menuIsOpen(menu);
+ $$('.mega').forEach(m=>{if(m!==menu)hideMenu(m,true)});
+ $$('[data-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));$('#mobile-menu').setAttribute('aria-expanded','false');
+ if(opening){showMenu(menu);trigger.setAttribute('aria-expanded','true')}else{hideMenu(menu);shadeTo(false)}
+}
+$$('[data-menu]').forEach(b=>b.onclick=()=>toggleMenu($('#'+b.dataset.menu),b));
+$('#mobile-menu').onclick=()=>toggleMenu($('#solutions'),$('#mobile-menu'));
+$('#shade').onclick=closeMenus;$$('.mega a').forEach(a=>a.addEventListener('click',closeMenus));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenus()});
 const slides=[['scenes/hero-clearer-way.webp','Run your entire window furnishing business.','From one connected platform.','A consultant walking to her van after a customer visit, tablet in hand','78% 22%','89% 50%'],['scenes/hero-on-site.webp','Still typing up quotes at 9pm?','There’s a clearer way to work.','A consultant measuring a window with a laser measure, tablet in hand','70% 24%','81% 50%'],['scenes/hero-customers.webp','Turn every customer appointment','into a sales opportunity.','A consultant laughing with a customer over a fabric sample book','74% 33%','78% 50%']];
 let heroIndex=0,heroTimer,heroPaused=matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* One layer per slide, so each photo keeps its own slow zoom while it fades over the last one.
@@ -59,6 +107,7 @@ document.addEventListener('visibilitychange',startHero);syncPause();startHero();
   track.scrollTo({left:target??(i?track.scrollWidth-track.clientWidth:0),behavior:motion.matches?'instant':'smooth'});
  });
  track.addEventListener('pointerdown',takeControl,{passive:true});
+ dragRow(track,{stops:()=>cards.map(card=>card.offsetLeft-cards[0].offsetLeft),onGrab:takeControl});
  track.addEventListener('focusin',takeControl);
  track.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey)takeControl()},{passive:true});
  addEventListener('scroll',schedule,{passive:true});
@@ -211,6 +260,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  };
  carousel.querySelector('.testimonial-prev').addEventListener('click',()=>move(-1));
  carousel.querySelector('.testimonial-next').addEventListener('click',()=>move(1));
+ dragRow(track,{loop:()=>cycle,step:()=>cards[1].offsetLeft-cards[0].offsetLeft,onGrab:pauseBriefly,onRelease:pauseBriefly});
  new ResizeObserver(measure).observe(track);
  new IntersectionObserver(([entry])=>visible=entry.isIntersecting).observe(carousel);
  measure();requestAnimationFrame(tick);
@@ -434,4 +484,188 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   input.addEventListener('blur',()=>{if(!input.value){chars=0;deleting=false;text.textContent='';start()}});
   document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
  });
+})();
+
+/* Carousels you can grab. A row follows the mouse 1:1, resists past either end, and on release
+   carries the throw's speed into a spring that settles on the nearest card. Grabbing it again
+   mid-glide picks it up from where it is. Touch keeps the browser's own swipe for these rows. */
+function swallowClick(el){
+ const stop=e=>{e.preventDefault();e.stopPropagation()};
+ el.addEventListener('click',stop,true);setTimeout(()=>el.removeEventListener('click',stop,true),40);
+}
+function dragRow(track,{stops,loop,step,onGrab,onRelease}){
+ let drag=null,glide=0,shown=0;
+ const max=()=>Math.max(0,track.scrollWidth-track.clientWidth);
+ const show=p=>{
+  shown=p;
+  if(loop){const c=loop();track.scrollLeft=c?((p%c)+c)%c:p;return}
+  const inside=Math.min(max(),Math.max(0,p));
+  track.scrollLeft=inside;track.style.translate=Math.abs(p-inside)<.5?'':`${(inside-p).toFixed(1)}px 0`;
+ };
+ const resist=raw=>{
+  if(loop)return raw;
+  const inside=Math.min(max(),Math.max(0,raw)),over=raw-inside,size=track.clientWidth||1;
+  return over?inside+Math.sign(over)*Math.abs(over)*size*.55/(size+.55*Math.abs(over)):raw;
+ };
+ const stopGlide=()=>{cancelAnimationFrame(glide);glide=0;track.classList.remove('is-gliding')};
+ const settle=(from,v)=>{
+  const dir=Math.sign(v),fast=Math.abs(v)>350,projected=from+v*.45;
+  let target;
+  if(loop){
+   const size=step();target=Math.round(projected/size)*size;
+   if(fast&&(target-from)*dir<=2)target=(dir>0?Math.floor(from/size)+1:Math.ceil(from/size)-1)*size;
+  }else{
+   const m=max(),list=[...new Set(stops().map(x=>Math.min(m,Math.max(0,x))))];
+   target=list.reduce((a,b)=>Math.abs(b-projected)<Math.abs(a-projected)?b:a,list[0]);
+   if(fast&&(target-from)*dir<=2){const ahead=list.filter(x=>(x-from)*dir>2).sort((a,b)=>(a-from)*dir-(b-from)*dir)[0];if(ahead!==undefined)target=ahead}
+  }
+  const w=2*Math.PI/.45,x0=from-target,t0=performance.now();
+  track.classList.add('is-gliding');
+  const frame=now=>{
+   const t=(now-t0)/1000,e=Math.exp(-w*t),x=(x0+(v+w*x0)*t)*e,speed=(v-w*(v+w*x0)*t)*e;
+   if((Math.abs(x)<.5&&Math.abs(speed)<20)||t>2){show(target);stopGlide();onRelease&&onRelease();return}
+   show(target+x);glide=requestAnimationFrame(frame);
+  };
+  glide=requestAnimationFrame(frame);
+ };
+ track.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='mouse'||e.button!==0||e.target.closest('input,textarea,select'))return;
+  if(glide)stopGlide();else shown=track.scrollLeft;
+  drag={x:e.clientX,y:e.clientY,from:shown,id:e.pointerId,moved:false,samples:[]};
+ });
+ track.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.moved){
+   if(Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)){drag=null;return}
+   if(Math.abs(dx)<6)return;
+   drag.moved=true;
+   track.setPointerCapture(e.pointerId);track.classList.add('is-dragging');
+   getSelection()?.removeAllRanges();onGrab&&onGrab();
+  }
+  show(resist(drag.from-(e.clientX-drag.x)));
+  drag.samples.push([e.timeStamp,shown]);
+  while(drag.samples.length>2&&e.timeStamp-drag.samples[0][0]>100)drag.samples.shift();
+ });
+ const release=e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  if(drag.moved&&e.type==='pointerup'){show(resist(drag.from-(e.clientX-drag.x)));drag.samples.push([e.timeStamp,shown])}
+  const d=drag;drag=null;
+  if(!d.moved)return;
+  track.classList.remove('is-dragging');swallowClick(track);
+  const s=d.samples,a=s[0],b=s[s.length-1];
+  const v=e.type==='pointerup'&&s.length>1&&b[0]>a[0]&&e.timeStamp-b[0]<80?Math.max(-6000,Math.min(6000,(b[1]-a[1])/(b[0]-a[0])*1000)):0;
+  settle(shown,v);
+ };
+ track.addEventListener('pointerup',release);track.addEventListener('pointercancel',release);
+ track.addEventListener('dragstart',e=>e.preventDefault());
+}
+
+/* Hero: swipe or drag sideways to change the photo. Vertical swipes still scroll the page.
+   The headline follows the drag a little, then slides out and the next one slides in. */
+(function(){
+ const hero=$('.hero'),lines=$('.hero-lines'),still=matchMedia('(prefers-reduced-motion: reduce)');
+ let drag=null;
+ const ignore=e=>e.button!==0||e.target.closest('a,button,input,textarea,select,label,form')||(e.pointerType==='mouse'&&e.target.closest('.hero-copy,.hero-bottom'));
+ hero.addEventListener('pointerdown',e=>{if(!ignore(e))drag={x:e.clientX,y:e.clientY,id:e.pointerId,moved:false,samples:[]}});
+ hero.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.moved){
+   if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)){drag=null;return}
+   if(Math.abs(dx)<10)return;
+   drag.moved=true;
+   hero.setPointerCapture(e.pointerId);hero.classList.add('is-dragging');clearInterval(heroTimer);getSelection()?.removeAllRanges();
+  }
+  const move=e.clientX-drag.x;
+  if(!still.matches){lines.style.transition='none';lines.style.translate=`${(move*.3).toFixed(1)}px 0`;lines.style.opacity=Math.max(.3,1-Math.abs(move)/360).toFixed(3)}
+  drag.samples.push([e.timeStamp,e.clientX]);
+  while(drag.samples.length>2&&e.timeStamp-drag.samples[0][0]>100)drag.samples.shift();
+ });
+ const release=e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const d=drag;drag=null;
+  if(!d.moved)return;
+  hero.classList.remove('is-dragging');swallowClick(hero);
+  if(e.type==='pointerup')d.samples.push([e.timeStamp,e.clientX]);
+  const move=e.clientX-d.x,s=d.samples,a=s[0],b=s[s.length-1];
+  const v=s.length>1&&b[0]>a[0]?(b[1]-a[1])/(b[0]-a[0])*1000:0;
+  const swipe=e.type==='pointerup'&&(Math.abs(move)>70||(Math.abs(move)>24&&Math.abs(v)>450));
+  if(!swipe){
+   lines.style.transition='translate .35s cubic-bezier(.2,.9,.25,1),opacity .3s ease,transform .26s ease';
+   lines.style.translate='';lines.style.opacity='';
+   setTimeout(()=>{if(!drag)lines.style.transition=''},400);
+   startHero();return;
+  }
+  const out=move<0?-1:1;
+  if(!still.matches){lines.style.transition='translate .26s ease,opacity .26s ease';lines.style.translate=`${out*60}px 0`;lines.style.opacity='0'}
+  manualHero(heroIndex-out);
+  if(still.matches)return;
+  setTimeout(()=>{
+   lines.style.transition='none';lines.style.translate=`${-out*40}px 0`;void lines.offsetWidth;
+   lines.style.transition='translate .5s cubic-bezier(.2,.9,.25,1),opacity .4s ease';lines.style.translate='';lines.style.opacity='';
+   setTimeout(()=>{if(!drag)lines.style.transition=''},550);
+  },270);
+ };
+ hero.addEventListener('pointerup',release);hero.addEventListener('pointercancel',release);
+ hero.addEventListener('dragstart',e=>{if(drag)e.preventDefault()});
+})();
+
+/* Customer logo strip: it drifts on its own, eases to a stop under the mouse, and can be dragged
+   or thrown either way with mouse or touch before it drifts on again. */
+(function(){
+ const view=$('.trust-view'),track=view&&view.querySelector('.trust-track');
+ if(!track)return;
+ const still=matchMedia('(prefers-reduced-motion: reduce)');
+ let offset=0,vel=0,half=0,last=0,frame=0,hovered=false,onScreen=false,drag=null;
+ view.classList.add('is-js');
+ const drift=()=>still.matches||hovered?0:-half/50;
+ const tick=now=>{
+  const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;
+  if(!drag){vel+=(drift()-vel)*(1-Math.exp(-dt/.5));offset+=vel*dt}
+  if(half){offset%=half;if(offset>0)offset-=half}
+  track.style.transform=`translate3d(${offset.toFixed(2)}px,0,0)`;
+  frame=(onScreen&&!document.hidden)||drag?requestAnimationFrame(tick):0;
+ };
+ const run=()=>{if(!frame){last=performance.now();frame=requestAnimationFrame(tick)}};
+ view.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hovered=true});
+ view.addEventListener('pointerleave',()=>hovered=false);
+ view.addEventListener('pointerdown',e=>{if(e.button===0)drag={x:e.clientX,y:e.clientY,from:offset,id:e.pointerId,moved:false,samples:[]}});
+ view.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.moved){
+   if(Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)){drag=null;return}
+   if(Math.abs(dx)<6)return;
+   drag.moved=true;vel=0;
+   view.setPointerCapture(e.pointerId);view.classList.add('is-dragging');
+  }
+  offset=drag.from+(e.clientX-drag.x);
+  drag.samples.push([e.timeStamp,e.clientX]);
+  while(drag.samples.length>2&&e.timeStamp-drag.samples[0][0]>100)drag.samples.shift();
+  run();
+ });
+ const release=e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  if(drag.moved&&e.type==='pointerup'){offset=drag.from+(e.clientX-drag.x);drag.samples.push([e.timeStamp,e.clientX])}
+  const d=drag;drag=null;
+  if(!d.moved)return;
+  view.classList.remove('is-dragging');
+  const s=d.samples,a=s[0],b=s[s.length-1];
+  vel=!still.matches&&e.type==='pointerup'&&s.length>1&&b[0]>a[0]&&e.timeStamp-b[0]<80?Math.max(-4000,Math.min(4000,(b[1]-a[1])/(b[0]-a[0])*1000)):0;
+  run();
+ };
+ view.addEventListener('pointerup',release);view.addEventListener('pointercancel',release);
+ view.addEventListener('dragstart',e=>e.preventDefault());
+ const measure=()=>{half=track.scrollWidth/2};
+ new ResizeObserver(measure).observe(track);
+ new IntersectionObserver(([e])=>{onScreen=e.isIntersecting;if(onScreen)run()}).observe(view);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
+ measure();vel=drift();run();
+})();
+
+/* Five steps: the icons rise in and the connecting lines draw across when the row comes into view */
+(function(){
+ const steps=$('.friction-steps');if(!steps)return;
+ new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){steps.classList.add('in-view');o.disconnect()}}),{threshold:.35}).observe(steps);
 })();
