@@ -397,3 +397,41 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   d.addEventListener('close',()=>{(live.get(d)||[]).forEach(a=>a.cancel());live.delete(d);d.classList.remove('is-closing')});
  });
 })();
+
+/* Email typing hint: while the field is empty and on screen, sample work emails type themselves in
+   and delete again, with a caret, so the box clearly reads as an email field. It steps aside the
+   moment the visitor clicks in or types, and comes back if they leave it empty. */
+(function(){
+ const emails=['sarah@yourblindstore.com.au','orders@yourshuttercompany.com','hello@yourcurtainstudio.co.nz','james@yourawnings.co.uk'];
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ $$('input[data-typing-hint]').forEach(input=>{
+  const form=input.form,hint=input.parentElement.querySelector('.email-hint'),text=hint.querySelector('.email-hint-text');
+  let word=0,chars=0,deleting=false,timer=null,onScreen=false;
+  const free=()=>onScreen&&!input.value&&document.activeElement!==input&&!document.hidden;
+  const stop=()=>{clearTimeout(timer);timer=null;form.classList.remove('is-hinting')};
+  const tick=()=>{
+   timer=null;
+   if(!free()){stop();return}
+   form.classList.add('is-hinting');
+   const email=emails[word];let wait;
+   hint.classList.remove('is-waiting');
+   if(!deleting){
+    chars++;
+    if(chars>=email.length){deleting=true;hint.classList.add('is-waiting');wait=1900}
+    else wait=60+Math.random()*80+('@.'.includes(email[chars-1])?160:0);
+   }else{
+    chars--;
+    if(chars<=0){deleting=false;word=(word+1)%emails.length;hint.classList.add('is-waiting');wait=650}
+    else wait=26;
+   }
+   text.textContent=email.slice(0,chars);
+   timer=setTimeout(tick,wait);
+  };
+  const start=()=>{if(!timer&&free()){hint.classList.add('is-waiting');form.classList.add('is-hinting');timer=setTimeout(tick,500)}};
+  new IntersectionObserver(([e])=>{onScreen=e.isIntersecting;onScreen?start():stop()}).observe(input);
+  input.addEventListener('focus',stop);
+  input.addEventListener('input',()=>{if(input.value)stop()});
+  input.addEventListener('blur',()=>{if(!input.value){chars=0;deleting=false;text.textContent='';start()}});
+  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ });
+})();
