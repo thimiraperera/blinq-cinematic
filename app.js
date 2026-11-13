@@ -1,5 +1,7 @@
 document.documentElement.classList.add('js');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+/* The phone menu lists the same links as the desktop menus, so each link is written once */
+$$('[data-copy]').forEach(ul=>ul.replaceChildren(...$$(ul.dataset.copy).map(li=>li.cloneNode(true))));
 /* Menus fade and slide into place under the header, and back out when they close. Every move
    starts from where the menu is on screen, so quick clicks between menus never jump. */
 const menuReduce=matchMedia('(prefers-reduced-motion: reduce)'),menuPhone=matchMedia('(max-width:800px)'),menuMoves=new WeakMap();
@@ -88,7 +90,7 @@ document.addEventListener('visibilitychange',startHero);syncPause();startHero();
 (function(){
  const section=$('#range'),track=$('#product-track'),cards=[...track.children];
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
- let manual=false,queued=false;
+ let manual=false,queued=false,near=false;
  const takeControl=()=>{manual=true;track.classList.remove('scroll-driven')};
  const paint=()=>{
   queued=false;
@@ -98,7 +100,8 @@ document.addEventListener('visibilitychange',startHero);syncPause();startHero();
   track.classList.add('scroll-driven');
   track.scrollLeft=progress*Math.min(420,track.clientWidth*.45);
  };
- const schedule=()=>{if(!queued&&!manual){queued=true;requestAnimationFrame(paint)}};
+ const schedule=()=>{if(near&&!queued&&!manual){queued=true;requestAnimationFrame(paint)}};
+ new IntersectionObserver(([e])=>{near=e.isIntersecting;schedule()}).observe(section);
  ['prev','next'].forEach((id,i)=>$('#'+id).onclick=()=>{
   const left=track.scrollLeft;
   const stops=cards.map(card=>card.offsetLeft-cards[0].offsetLeft);
@@ -127,7 +130,7 @@ const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 (function(){
  const box=$('#quote-flip');if(!box)return;
  const paint=(tile,d)=>{tile.dataset.d=d;tile.innerHTML=`<span class="half top"><span>${d}</span></span><span class="half bottom"><span>${d}</span></span>`};
- const start=reducedMotion?QUOTES_TOTAL:QUOTES_TOTAL-36;
+ const start=reducedMotion?QUOTES_TOTAL:Math.max(QUOTES_TOTAL-36,10**(String(QUOTES_TOTAL).length-1));
  const tiles=[...String(start)].map(d=>{const t=document.createElement('span');t.className='flip-tile';t.setAttribute('aria-hidden','true');paint(t,d);return t});
  box.replaceChildren(...tiles);
  const flip=(tile,next)=>{
@@ -233,7 +236,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  const carousel=$('.testimonial-carousel'),track=carousel.querySelector('.testimonial-track');
  const cards=[...track.children];
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
- let resumeAt=0,hovered=false,visible=false,last=0,position=0,cycle=0;
+ let resumeAt=0,hovered=false,visible=false,last=0,position=0,cycle=0,frame=0;
  cards.forEach(card=>{
   const copy=card.cloneNode(true);copy.setAttribute('aria-hidden','true');
   copy.querySelectorAll('a,button').forEach(el=>el.tabIndex=-1);track.append(copy);
@@ -244,7 +247,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   if(visible&&now>=resumeAt&&!hovered&&!motion.matches&&!document.hidden&&!track.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&cycle){
    position=(position+elapsed*.025)%cycle;track.scrollLeft=position;
   }else position=track.scrollLeft;
-  requestAnimationFrame(tick);
+  frame=visible?requestAnimationFrame(tick):0;
  };
  track.addEventListener('scroll',()=>{if(cycle&&track.scrollLeft>=cycle){track.scrollLeft-=cycle;position=track.scrollLeft}},{passive:true});
  track.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hovered=true});
@@ -262,8 +265,8 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  carousel.querySelector('.testimonial-next').addEventListener('click',()=>move(1));
  dragRow(track,{loop:()=>cycle,step:()=>cards[1].offsetLeft-cards[0].offsetLeft,onGrab:pauseBriefly,onRelease:pauseBriefly});
  new ResizeObserver(measure).observe(track);
- new IntersectionObserver(([entry])=>visible=entry.isIntersecting).observe(carousel);
- measure();requestAnimationFrame(tick);
+ new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible&&!frame){last=performance.now();frame=requestAnimationFrame(tick)}}).observe(carousel);
+ measure();
 })();
 
 (() => {
