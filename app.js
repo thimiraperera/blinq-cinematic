@@ -206,23 +206,35 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
 
 
 (function(){
- const dialog=$('#video-dialog'),player=dialog.querySelector('.video-player');
+ const dialog=$('#video-dialog'),player=dialog.querySelector('.video-player'),external=dialog.querySelector('.video-external');
  const closeVideo=()=>dialog.close();
  document.addEventListener('click',e=>{
-  const button=e.target.closest('[data-video]');
+  const button=e.target.closest('[data-video],[data-video-src]');
   if(!button)return;
   e.preventDefault();
   const title=button.dataset.videoTitle||button.closest('.suite-item').querySelector('h3').textContent;
   $('#video-title').textContent=title;
-  const frame=document.createElement('iframe');
-  frame.src='https://www.youtube.com/embed/'+encodeURIComponent(button.dataset.video)+'?autoplay=1&rel=0';
-  frame.title=title+' | BlinQ video';
-  frame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
-  frame.allowFullscreen=true;
-  frame.referrerPolicy='strict-origin-when-cross-origin';
-  player.replaceChildren(frame);
-  dialog.querySelector('.video-external').href='https://www.youtube.com/watch?v='+encodeURIComponent(button.dataset.video);
-  dialog.showModal();document.body.classList.add('modal-open'); });
+  const src=button.dataset.videoSrc;
+  if(src){
+   // BlinQ's own feature videos are served with the site and play in the browser's player
+   const video=document.createElement('video');
+   Object.assign(video,{src,controls:true,playsInline:true,preload:'auto'});
+   if(button.dataset.videoPoster)video.poster=button.dataset.videoPoster;
+   video.setAttribute('aria-label',title);
+   player.replaceChildren(video);
+  }else{
+   const frame=document.createElement('iframe');
+   frame.src='https://www.youtube.com/embed/'+encodeURIComponent(button.dataset.video)+'?autoplay=1&rel=0';
+   frame.title=title+' | BlinQ video';
+   frame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+   frame.allowFullscreen=true;
+   frame.referrerPolicy='strict-origin-when-cross-origin';
+   player.replaceChildren(frame);
+   external.href='https://www.youtube.com/watch?v='+encodeURIComponent(button.dataset.video);
+  }
+  external.hidden=!!src;
+  dialog.showModal();document.body.classList.add('modal-open');
+  if(src)player.firstChild.play().catch(()=>{}); });
  dialog.querySelector('.video-close').addEventListener('click',closeVideo);
  dialog.addEventListener('close',()=>{player.replaceChildren();document.body.classList.remove('modal-open')});
  dialog.addEventListener('click',e=>{
