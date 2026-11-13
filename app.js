@@ -741,3 +741,26 @@ function dragRow(track,{stops,loop,step,onGrab,onRelease}){
  },{rootMargin:'0px 0px -8% 0px',threshold:.08});
  items.forEach(el=>{el.classList.add('reveal');if(el.matches(media))el.classList.add('reveal-media');io.observe(el)});
 })();
+
+/* Accordions (the FAQ and the plan comparison) open and close smoothly: the height moves between
+   the question and the full answer, starting from wherever it is if clicked again mid-way. */
+(function(){
+ const still=matchMedia('(prefers-reduced-motion: reduce)');
+ $$('details').forEach(d=>{
+  const summary=d.querySelector(':scope>summary');if(!summary)return;
+  let anim=null;
+  summary.addEventListener('click',e=>{
+   if(still.matches)return;
+   e.preventDefault();
+   const from=d.getBoundingClientRect().height,c=getComputedStyle(d);
+   const closed=summary.offsetHeight+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth);
+   const opening=!d.open||d.hasAttribute('data-closing');
+   anim?.cancel();
+   d.toggleAttribute('data-closing',!opening);d.open=true;
+   const to=opening?d.offsetHeight:closed;
+   d.style.overflow='hidden';
+   anim=d.animate({height:[from+'px',to+'px']},{duration:Math.min(520,200+Math.abs(to-from)*.5),easing:'cubic-bezier(.2,.8,.2,1)'});
+   anim.onfinish=()=>{anim=null;d.style.overflow='';if(d.hasAttribute('data-closing')){d.removeAttribute('data-closing');d.open=false}};
+  });
+ });
+})();

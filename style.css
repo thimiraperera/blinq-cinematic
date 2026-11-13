@@ -864,3 +864,20 @@ a.sol-item:hover .sol-icon{background:var(--icon-ink)}
 .people-wall{overflow:hidden}
 /* Resources: Support has the longest labels, Company the shortest */
 @media(min-width:1021px){#resources-menu .res-panel{grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) minmax(0,.7fr)}}
+
+/* Plan comparison: its own top and bottom lines are enough, so the note below has none */
+#pricing .pricing-note{border-top:0;padding-top:0}
+
+/* Google review card: the company logo is its picture (a lettered tile until the logo arrives) */
+.review-logo{display:grid;place-items:center;background:#f1f1f3}
+.review-logo img{width:auto;height:auto;max-width:60%;max-height:42%;object-fit:contain}
+.review-logo-placeholder{display:grid;place-items:center;width:88px;height:88px;border-radius:20px;background:#fff;box-shadow:inset 0 0 0 1px #e3e3e6;color:var(--ink);font-size:30px;font-weight:650;letter-spacing:-.5px}
+.review-stars{margin-right:8px;color:var(--red);font-size:13px;letter-spacing:2px}
+
+/* Accordions: while one closes, its icon already shows the closed state */
+.faq details[data-closing] summary:after{content:'+'}
+#pricing .pricing-comparison[data-closing] summary span{transform:none}
+
+/* Hero email field: the typing hint starts at the left, where typed text starts */
+.hero .email-hint{font-size:16px}
+@media(max-width:800px){.hero .trial-form input{text-align:left;padding-inline:18px}.hero .email-hint{padding:0 18px;font-size:14px}}
