@@ -669,3 +669,39 @@ function dragRow(track,{stops,loop,step,onGrab,onRelease}){
  const steps=$('.friction-steps');if(!steps)return;
  new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){steps.classList.add('in-view');o.disconnect()}}),{threshold:.35}).observe(steps);
 })();
+
+/* Blur fade-up: as each piece of content scrolls into view it eases up into focus. Pieces that
+   arrive together follow one another in reading order. The hero has its own entrance. Each piece
+   arrives through a one-off animation that leaves nothing behind, so hover effects work as before. */
+(function(){
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+ const pieces=['.trust-label','.trust-view',
+  '.friction-top>div:first-child>*','.friction-work','.friction-note',
+  '.day-head>*','.day-stage','.moment','.day-cta',
+  '.suite>.eyebrow','.suite>h2','.suite>p','.suite-grid',
+  '.range .section-heading>div>*','.product-track',
+  '.mobile-copy>*','.mobile-panel>img','.mobile-foot',
+  '.ai-panel>div:first-child>*','.voice-assistant','.ai-concepts>*',
+  '.people-wall>*','.people-card',
+  '.stories .section-heading>div>*','.testimonial-carousel','.stories-walkthrough',
+  '.growth>div:first-child>*','.growth-visual',
+  '.plans>:not(.pricing-cards)','.pricing-card',
+  '.faq>*',
+  '.integration-heading>*','.integration-wall',
+  '.blog-head>*','.blog-card','.blog-all',
+  '.closing>img','.closing-copy>*','.trial-card',
+  'footer>*'];
+ const media='.day-stage,.mobile-panel>img,.people-wall>*,.growth-visual,.closing>img';
+ const items=[...new Set(pieces.flatMap(sel=>$$(sel)))].filter(el=>!el.closest('dialog,.mega,header,.hero'));
+ const io=new IntersectionObserver(entries=>{
+  entries.filter(e=>e.isIntersecting).map(e=>e.target)
+   .sort((a,b)=>a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING?-1:1)
+   .forEach((el,i)=>{
+    io.unobserve(el);
+    const start=el.classList.contains('reveal-media')?{opacity:0,transform:'scale(1.04)',filter:'blur(12px)'}:{opacity:0,transform:'translateY(18px)',filter:'blur(8px)'};
+    el.animate([start,{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:850,delay:Math.min(i,8)*70,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});
+    el.classList.remove('reveal','reveal-media');
+   });
+ },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+ items.forEach(el=>{el.classList.add('reveal');if(el.matches(media))el.classList.add('reveal-media');io.observe(el)});
+})();

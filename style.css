@@ -89,7 +89,7 @@ header{position:sticky;top:0}
 .hero-copy>:nth-child(2){animation-delay:.1s}
 .hero-copy>:nth-child(3){animation-delay:.22s}
 .hero-copy>:nth-child(4){animation-delay:.34s}
-@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+@keyframes rise{from{opacity:0;transform:translateY(18px);filter:blur(8px)}}
 .hero-copy .eyebrow{margin:0 0 12px}
 .hero-lines{transition:opacity .26s ease,transform .26s ease}
 .hero-lines.is-out{opacity:0;transform:translateY(8px)}
@@ -792,3 +792,47 @@ dialog.is-closing{pointer-events:none}
 .is-dragging,.is-dragging *{cursor:grabbing!important;-webkit-user-select:none;user-select:none}
 .product-track.is-dragging,.product-track.is-gliding{scroll-snap-type:none;scroll-behavior:auto}
 .product-track img,.testimonial-track img,.trust-view img{-webkit-user-drag:none}
+
+/* One content width for the whole page. Every section, the header, the menus and the footer keep
+   their content inside the same gutter: 7% of the page frame on larger screens (100.8px at the
+   1440px frame) and 6% on phones. --gutter is for things inside the 1440px frame or centred at
+   that width; --gutter-wide is for full-width bands, and adds the space outside the frame. */
+:root{--gutter-ratio:.07;--gutter:calc(min(100%,var(--site-max-width))*var(--gutter-ratio));--gutter-wide:calc((100% - min(100%,var(--site-max-width)))/2 + min(100%,var(--site-max-width))*var(--gutter-ratio))}
+@media(max-width:800px){:root{--gutter-ratio:.06}}
+.header-inner{padding-inline:var(--gutter)}
+header .logo{object-position:left center}
+header nav a,header nav button,.utilities .login{padding-inline:var(--nav-pad,18px);white-space:nowrap}
+@media(min-width:801px){.utilities .login{margin-right:calc(var(--nav-pad,18px)*-1)}}
+@media(min-width:801px) and (max-width:1100px){:root{--nav-pad:12px}header nav{gap:2px}}
+.mega-float{padding-inline:var(--gutter)}
+.hero{padding-inline:var(--gutter-wide)}
+.hero-bottom{left:var(--gutter-wide);right:var(--gutter-wide)}
+.trust,.friction,.day,.suite,.section,.ai-panel,.growth,.plans,.faq,.integration-hub{padding-inline:var(--gutter)}
+.range .section-heading,.product-track{padding-right:0}
+.faq{max-width:none;margin:0}
+@media(min-width:1024px){
+.faq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.8fr);column-gap:72px;align-items:start}
+.faq>h2{grid-column:1;grid-row:1/span 20;margin:0}
+.faq>details{grid-column:2}
+}
+@media(min-width:801px){
+.mobile-panel{padding-left:var(--gutter)}
+.mobile-copy{padding-left:0;padding-right:56px}
+.mobile-foot{left:var(--gutter)}
+}
+@media(max-width:800px){.mobile-copy{padding-inline:var(--gutter)}}
+.closing>div{max-width:none;margin-inline:0;padding-inline:var(--gutter-wide)}
+footer{padding-inline:var(--gutter-wide)}
+
+/* Blur fade-up: content eases up into focus as it scrolls into view. app.js adds these classes
+   and takes them off again once the piece has arrived. */
+.reveal{opacity:0;transform:translateY(18px);filter:blur(8px)}
+.reveal.reveal-media{transform:scale(1.04);filter:blur(12px)}
+.js .friction-steps>div>:not(.step-head){opacity:0;transform:translateY(12px);filter:blur(6px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1),filter .6s ease}
+.friction-steps>div:nth-child(1)>:not(.step-head){transition-delay:.12s}
+.friction-steps>div:nth-child(2)>:not(.step-head){transition-delay:.22s}
+.friction-steps>div:nth-child(3)>:not(.step-head){transition-delay:.32s}
+.friction-steps>div:nth-child(4)>:not(.step-head){transition-delay:.42s}
+.friction-steps>div:nth-child(5)>:not(.step-head){transition-delay:.52s}
+.friction-steps.in-view>div>:not(.step-head){opacity:1;transform:none;filter:none}
+@media(prefers-reduced-motion:reduce){.reveal,.js .friction-steps>div>:not(.step-head){opacity:1;transform:none;filter:none;transition:none}}
