@@ -273,7 +273,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
 (() => {
   const motion=matchMedia('(prefers-reduced-motion: reduce)');
   const states=new Map();
-  const format=value=>'A$'+Math.round(value).toLocaleString('en-AU');
+  const format=value=>'$'+Math.round(value).toLocaleString('en-AU');
   const animate=(state,target,from=state.value)=>{
     cancelAnimationFrame(state.frame);
     state.target=target;
