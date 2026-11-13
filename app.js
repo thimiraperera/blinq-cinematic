@@ -329,6 +329,10 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
   updateHeader();
 })();
 
+/* The BlinQ office for the visitor's time zone, and its phone number as [dial, display] */
+const region=()=>{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';return tz.startsWith('Europe/')?'uk':tz.startsWith('America/')?'us':'au'};
+const officePhone=()=>({au:['+61388444864','+61 3 8844 4864'],uk:['+441173257254','+44 117 325 7254'],us:['+13237458257','+1 323 745 8257']})[region()];
+
 /* Booking popup. BlinQ's Calendly scheduling runs inside it, so bookings land in BlinQ's real
    calendars. Every link to Calendly or the old call-back page opens this popup instead. */
 (function(){
@@ -341,13 +345,12 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  };
  const clearFrame=()=>{box.querySelector('iframe')?.remove()};
  const label=(mins,training)=>{dialog.querySelector('.booking-duration').textContent=mins+' minutes';dialog.querySelector('#booking-title').textContent=training?'Book a training session':'Book a personalised demo'};
- const region=()=>{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';return tz.startsWith('Europe/')?'uk':tz.startsWith('America/')?'us':'au'};
  const open=()=>{
   closeMenus();
   $$('dialog[open]').forEach(d=>{if(d!==dialog)d.close()});
   clearFrame();show(1);label(30);
   dialog.querySelectorAll('.booking-option').forEach(b=>b.classList.toggle('is-suggested',b.dataset.region===region()));
-  const call={au:['+61388444864','+61 3 8844 4864'],uk:['+441173257254','+44 117 325 7254'],us:['+13237458257','+1 323 745 8257']}[region()],tel=dialog.querySelector('.booking-call a');
+  const call=officePhone(),tel=dialog.querySelector('.booking-call a');
   tel.href='tel:'+call[0];tel.textContent=call[1];
   dialog.showModal();
   document.body.classList.add('modal-open');
@@ -380,6 +383,35 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  });
 })();
 
+/* Contact popup, opened from "Contact us" in the menus. The browser checks the fields before sending.
+   shortcut: the message goes out through the visitor's own email app, so nothing is stored here; connect a form endpoint (such as BlinQ's CRM) before launch. */
+(function(){
+ const dialog=$('#contact-dialog'),form=dialog.querySelector('.contact-form'),done=dialog.querySelector('.contact-done');
+ const sent=on=>{form.hidden=on;done.hidden=!on};
+ document.addEventListener('click',e=>{
+  if(!e.target.closest('[data-contact]')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;
+  e.preventDefault();closeMenus();
+  $$('dialog[open]').forEach(d=>{if(d!==dialog)d.close()});
+  const [dial,shown]=officePhone(),tel=dialog.querySelector('.contact-phone');tel.href='tel:'+dial;tel.textContent=shown;
+  sent(false);dialog.showModal();document.body.classList.add('modal-open');form.elements.name.focus();
+ });
+ form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(form)),mail=document.createElement('a');
+  const from=[f.name,f.email,f.phone,f.company].filter(Boolean).join('\n');
+  mail.href='mailto:support@blinq.com.au?subject='+encodeURIComponent(f.topic+': '+f.name)+'&body='+encodeURIComponent(f.message+'\n\n'+from);
+  mail.click();form.reset();sent(true);done.querySelector('.booking-finish').focus();
+ });
+ dialog.querySelector('.booking-close').addEventListener('click',()=>dialog.close());
+ done.querySelector('.booking-finish').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));
+ dialog.addEventListener('click',e=>{
+  if(e.target!==dialog)return;
+  const r=dialog.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();
+ });
+})();
+
 /* Popup motion, shared by every dialog on the page.
    A popup grows out of the spot that was pressed to open it, its content settles in just after,
    and it shrinks back toward that spot when it closes. Every move starts from where the popup is
@@ -393,7 +425,7 @@ new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',
  let press=null;
  addEventListener('pointerdown',e=>{press={x:e.clientX,y:e.clientY,t:performance.now()}},true);
  addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')press=null},true);
- const isSheet=d=>d.id==='booking-dialog'&&phone.matches;
+ const isSheet=d=>(d.id==='booking-dialog'||d.id==='contact-dialog')&&phone.matches;
  const hidden=d=>reduce.matches?{opacity:0,transform:'none'}:isSheet(d)?{opacity:1,transform:'translateY(100%)'}:{opacity:0,transform:'translateY(10px) scale(.92)'};
  const timing=(d,opening)=>reduce.matches?{duration:opening?200:160,easing:'ease'}
   :opening?{duration:isSheet(d)?520:460,easing:isSheet(d)?'cubic-bezier(.32,.72,0,1)':'cubic-bezier(.2,.9,.25,1)'}

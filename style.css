@@ -822,3 +822,44 @@ footer{padding-inline:var(--gutter-wide)}
 
 /* Printing shows everything, including content that has not scrolled into view yet */
 @media print{.reveal,.js .friction-steps .step-icon,.js .friction-steps>div>:not(.step-head){opacity:1!important;transform:none!important;filter:none!important}}
+
+/* Solutions menu: the five business types stand out with a coloured icon tile and a short line each,
+   in the platform section's colours */
+#solutions .res-panel{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;gap:6px 32px}
+.res-col .sol-grid li+li{margin-top:0}
+a.sol-item{align-items:flex-start;--icon-ink:#b44d54;--icon-bg:#faf0f0}
+li:nth-child(2)>a.sol-item{--icon-ink:#5275a3;--icon-bg:#eff4fa}
+li:nth-child(3)>a.sol-item{--icon-ink:#a07a37;--icon-bg:#faf5eb}
+li:nth-child(4)>a.sol-item{--icon-ink:#528776;--icon-bg:#eef6f2}
+li:nth-child(5)>a.sol-item{--icon-ink:#8270a4;--icon-bg:#f4f1f8}
+.sol-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:var(--icon-bg);transition:background .2s}
+.res-col .sol-icon svg,.mega-resources-mobile .sol-icon svg{width:21px;height:21px;color:var(--icon-ink);transition:color .2s}
+a.sol-item:hover .sol-icon{background:var(--icon-ink)}
+.res-col a.sol-item:hover .sol-icon svg,.mega-resources-mobile a.sol-item:hover .sol-icon svg{color:#fff}
+.sol-text{display:grid;gap:3px;padding-top:2px}
+.sol-text b{color:var(--ink);font-size:15px;font-weight:600}
+.sol-text small{color:#77777c;font-size:13px;line-height:1.4}
+.res-col .res-subhead{margin-top:26px}
+@media(max-width:1020px){.sol-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+@media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}}
+
+/* Contact popup: the booking popup's frame, with a short form */
+#contact-dialog{width:calc(100% - 32px);max-width:940px;max-height:calc(100svh - 32px);padding:0;border-radius:18px;overflow:auto;background:#fff;box-shadow:0 30px 90px #00000059}
+#contact-dialog .booking-shell{grid-template-columns:300px minmax(0,1fr)}
+.contact-lead{margin:0;color:var(--muted);font-size:14.5px;line-height:1.6}
+.booking-meta a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.contact-heading{margin:0;font-size:19px;letter-spacing:-.3px}
+.contact-form{display:grid;gap:16px;align-content:start}
+.contact-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.contact-form label{display:grid;gap:7px;color:var(--ink);font-size:13.5px;font-weight:600}
+.contact-form label em{color:#8a8a8f;font-style:normal;font-weight:400}
+.contact-form :is(input,select,textarea){width:100%;padding:12px 14px;border:1px solid #dcdcdf;border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:400;transition:border-color .15s,box-shadow .15s}
+.contact-form textarea{min-height:120px;resize:vertical}
+.contact-form :is(input,select,textarea):focus{outline:0;border-color:var(--red);box-shadow:0 0 0 3px #de161d1f}
+.contact-form :is(input,select,textarea):user-invalid{border-color:#c4151b;background:#fff8f8}
+.contact-send{justify-self:start}
+.contact-note{margin:-6px 0 0;color:#8a8a8f;font-size:12.5px}
+@media(max-width:860px){#contact-dialog{width:100%;max-width:none;height:100svh;max-height:100svh;border-radius:0;overflow:hidden}#contact-dialog .booking-shell{grid-template-columns:1fr}.contact-lead{display:none}.contact-row{grid-template-columns:1fr}}
+/* Photos waiting to reveal start slightly zoomed; keep the wall from widening the page on phones */
+.people-wall{overflow:hidden}
