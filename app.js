@@ -165,7 +165,8 @@ $$('.trial-form').forEach(form=>{
  });
  input.addEventListener('input',()=>{error.textContent=''});
 });
-$$('a[href="#trial"]').forEach(a=>a.addEventListener('click',()=>$('#trial-email').focus({preventScroll:true})));
+/* Focus after the jump to #trial, which would otherwise clear the focus again */
+$$('a[href="#trial"]').forEach(a=>a.addEventListener('click',()=>setTimeout(()=>$('#trial-email').focus({preventScroll:true}))));
 
 /* Sticky bar waits until the hero and its form have scrolled away */
 new IntersectionObserver(([e])=>$('.booking-bar').classList.toggle('is-visible',!e.isIntersecting)).observe($('#trial'));

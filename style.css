@@ -840,7 +840,6 @@ a.sol-item:hover .sol-icon{background:var(--icon-ink)}
 .sol-text{display:grid;gap:3px;padding-top:2px}
 .sol-text b{color:var(--ink);font-size:15px;font-weight:600}
 .sol-text small{color:#77777c;font-size:13px;line-height:1.4}
-.res-col .res-subhead{margin-top:26px}
 @media(max-width:1020px){.sol-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
 @media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}}
 
@@ -863,3 +862,5 @@ a.sol-item:hover .sol-icon{background:var(--icon-ink)}
 @media(max-width:860px){#contact-dialog{width:100%;max-width:none;height:100svh;max-height:100svh;border-radius:0;overflow:hidden}#contact-dialog .booking-shell{grid-template-columns:1fr}.contact-lead{display:none}.contact-row{grid-template-columns:1fr}}
 /* Photos waiting to reveal start slightly zoomed; keep the wall from widening the page on phones */
 .people-wall{overflow:hidden}
+/* Resources: Support has the longest labels, Company the shortest */
+@media(min-width:1021px){#resources-menu .res-panel{grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) minmax(0,.7fr)}}
