@@ -1,5 +1,7 @@
 document.documentElement.classList.add('js');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+// The footer's copyright year follows the calendar
+$$('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
 /* The phone menu lists the same links as the desktop menus, so each link is written once */
 $$('[data-copy]').forEach(ul=>ul.replaceChildren(...$$(ul.dataset.copy).map(li=>li.cloneNode(true))));
 /* Menus fade and slide into place under the header, and back out when they close. Every move
