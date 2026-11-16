@@ -738,7 +738,7 @@ function dragRow(track,{stops,loop,step,onGrab,onRelease}){
   '.integration-heading>*','.integration-wall',
   '.blog-head>*','.blog-card','.blog-all',
   '.closing>img','.closing-copy>*','.trial-card',
-  'footer>*'];
+  '.footer-brand','.footer-nav>div','.footer-contact','.footer-bottom'];
  const media='.day-stage,.mobile-panel>img,.people-wall>*,.growth-visual,.closing>img';
  const items=[...new Set(pieces.flatMap(sel=>$$(sel)))].filter(el=>!el.closest('dialog,.mega,header,.hero'));
  const io=new IntersectionObserver(entries=>{
