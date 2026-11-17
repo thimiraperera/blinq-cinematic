@@ -826,25 +826,23 @@ footer{padding-inline:var(--gutter-wide)}
 /* Printing shows everything, including content that has not scrolled into view yet */
 @media print{.reveal,.js .friction-steps .step-icon,.js .friction-steps>div>:not(.step-head){opacity:1!important;transform:none!important;filter:none!important}}
 
-/* Solutions menu: the five business types stand out with a coloured icon tile and a short line each,
-   in the platform section's colours */
+/* Solutions menu: the six business types, each with its package icon from the pricing section and a
+   short line. One image holds all six package icons; each tile shows its part through --pkg.
+   Other industries has its own icon drawn in the same style. */
 #solutions .res-panel{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 .sol-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;gap:6px 32px}
 .res-col .sol-grid li+li{margin-top:0}
-a.sol-item{align-items:flex-start;--icon-ink:#b44d54;--icon-bg:#faf0f0}
-li:nth-child(2)>a.sol-item{--icon-ink:#5275a3;--icon-bg:#eff4fa}
-li:nth-child(3)>a.sol-item{--icon-ink:#a07a37;--icon-bg:#faf5eb}
-li:nth-child(4)>a.sol-item{--icon-ink:#528776;--icon-bg:#eef6f2}
-li:nth-child(5)>a.sol-item{--icon-ink:#8270a4;--icon-bg:#f4f1f8}
-.sol-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:var(--icon-bg);transition:background .2s}
-.res-col .sol-icon svg,.mega-resources-mobile .sol-icon svg{width:21px;height:21px;color:var(--icon-ink);transition:color .2s}
-a.sol-item:hover .sol-icon{background:var(--icon-ink)}
-.res-col a.sol-item:hover .sol-icon svg,.mega-resources-mobile a.sol-item:hover .sol-icon svg{color:#fff}
+a.sol-item{align-items:flex-start}
+.sol-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:#f4f4f5;transition:background-color .2s,box-shadow .2s}
+.sol-pkg{display:block;width:36px;height:36px;background:url(assets/pricing-icons.webp) var(--pkg,0 0)/300% 200% no-repeat;transition:transform .25s}
+.sol-pkg.is-other{background:url(assets/other-industries-icon.svg) center/contain no-repeat}
+a.sol-item:hover .sol-icon{background:#fff;box-shadow:0 0 0 1px #e4e4e7,0 8px 16px -10px #0000004d}
+a.sol-item:hover .sol-pkg{transform:scale(1.08)}
 .sol-text{display:grid;gap:3px;padding-top:2px}
 .sol-text b{color:var(--ink);font-size:15px;font-weight:600}
 .sol-text small{color:#77777c;font-size:13px;line-height:1.4}
 @media(max-width:1020px){.sol-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
-@media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}}
+@media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}.mega-resources-mobile .sol-pkg{width:31px;height:31px}}
 
 /* Contact popup: the booking popup's frame, with a short form */
 #contact-dialog{width:calc(100% - 32px);max-width:940px;max-height:calc(100svh - 32px);padding:0;border-radius:18px;overflow:auto;background:#fff;box-shadow:0 30px 90px #00000059}
