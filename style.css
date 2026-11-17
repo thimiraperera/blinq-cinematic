@@ -516,7 +516,7 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .integration-heading p:not(.eyebrow){font-size:14px;line-height:1.75;color:var(--muted);margin:0}
 .integration-heading .btn{gap:24px;flex:none;min-width:0;background:#fff}
 .integration-heading .btn span{color:var(--red);font-size:17px}
-.integration-wall{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;list-style:none;margin:0;padding:1px;background:#e9e9ec;border:1px solid #e9e9ec;border-radius:12px;overflow:hidden}
+.integration-wall{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;list-style:none;margin:0;padding:1px;background:#e9e9ec;border:1px solid #e9e9ec;border-radius:12px;overflow:hidden}
 .integration-tile{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:108px;padding:22px 14px;background:#fff;font-size:16px;font-weight:550;letter-spacing:-.35px;color:#29292e;transition:background .2s}
 .integration-tile:hover{background:#fafafa}
 .integration-wordmark{display:block;width:auto;max-width:128px;max-height:32px;height:auto;object-fit:contain}
@@ -971,3 +971,15 @@ a.sol-item:hover .sol-pkg{transform:scale(1.08)}
 .app-store::after{content:attr(data-tip);top:calc(100% + 11px);padding:7px 11px;border-radius:8px;background:var(--night);color:#fff;font-size:12.5px;font-weight:500;line-height:1;white-space:nowrap;transform:translate(-50%,-4px)}
 .app-store::before{content:'';top:calc(100% + 5px);border:6px solid transparent;border-bottom-color:var(--night);border-top:0;transform:translate(-50%,-4px)}
 .app-store:hover::before,.app-store:hover::after,.app-store:focus-visible::before,.app-store:focus-visible::after{opacity:1;transform:translate(-50%,0)}
+
+/* Header: List your business sits before Log in as a quiet text link with a shop icon and a thin
+   divider, on screens wide enough to hold it (1200px and up); smaller screens have it in the menu's links */
+.utilities .list-biz{display:none}
+@media(min-width:1200px){
+ .utilities .list-biz{position:relative;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;white-space:nowrap;transition:background .15s}
+ .utilities .list-biz:hover{background:#f2f2f2}
+ .utilities .list-biz svg{width:17px;height:17px;color:var(--red)}
+ .utilities .list-biz::after{content:'';position:absolute;right:-13px;top:50%;width:1px;height:18px;margin-top:-9px;background:#d9d9dd}
+}
+/* where there is room, the main menu stays centred in the header whatever sits on the right */
+@media(min-width:1300px){.header-inner{display:grid;grid-template-columns:1fr auto 1fr}.header-inner>nav{justify-self:center}.header-inner>.utilities{justify-self:end}}
