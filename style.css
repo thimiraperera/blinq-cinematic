@@ -983,3 +983,6 @@ a.sol-item:hover .sol-pkg{transform:scale(1.08)}
 }
 /* where there is room, the main menu stays centred in the header whatever sits on the right */
 @media(min-width:1300px){.header-inner{display:grid;grid-template-columns:1fr auto 1fr}.header-inner>nav{justify-self:center}.header-inner>.utilities{justify-self:end}}
+
+/* A customer logo made for dark backgrounds (white lettering) sits on a dark tile */
+.review-logo-dark{background:#18181b}
