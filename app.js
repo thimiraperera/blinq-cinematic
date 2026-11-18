@@ -778,3 +778,23 @@ function dragRow(track,{stops,loop,step,onGrab,onRelease}){
   });
  });
 })();
+
+/* Industries popup: "Other industries" in the Solutions menu (and the phone menu) opens every supported
+   industry, the same six A to Z columns as the Industries menu. */
+(function(){
+ const dialog=$('#industries-dialog'),grid=$('#industries-menu .ind-grid');if(!dialog||!grid)return;
+ dialog.querySelector('.ind-slot').replaceWith(grid.cloneNode(true));
+ document.addEventListener('click',e=>{
+  if(!e.target.closest('[data-industries]')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;
+  e.preventDefault();closeMenus();
+  $$('dialog[open]').forEach(d=>{if(d!==dialog)d.close()});
+  dialog.showModal();document.body.classList.add('modal-open');dialog.querySelector('.ind-close').focus();
+ });
+ dialog.querySelector('.ind-close').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));
+ dialog.addEventListener('click',e=>{
+  if(e.target!==dialog)return;
+  const r=dialog.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();
+ });
+})();
