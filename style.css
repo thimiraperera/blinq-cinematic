@@ -516,7 +516,7 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .integration-heading p:not(.eyebrow){font-size:14px;line-height:1.75;color:var(--muted);margin:0}
 .integration-heading .btn{gap:24px;flex:none;min-width:0;background:#fff}
 .integration-heading .btn span{color:var(--red);font-size:17px}
-.integration-wall{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;list-style:none;margin:0;padding:1px;background:#e9e9ec;border:1px solid #e9e9ec;border-radius:12px;overflow:hidden}
+.integration-wall{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;list-style:none;margin:0;padding:1px;background:#e9e9ec;border:1px solid #e9e9ec;border-radius:12px;overflow:hidden}
 .integration-tile{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:108px;padding:22px 14px;background:#fff;font-size:16px;font-weight:550;letter-spacing:-.35px;color:#29292e;transition:background .2s}
 .integration-tile:hover{background:#fafafa}
 .integration-wordmark{display:block;width:auto;max-width:128px;max-height:32px;height:auto;object-fit:contain}
@@ -524,7 +524,7 @@ a.app-store:hover{background:#f0f0f2;transform:translateY(-1px)}
 .integration-api{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);min-height:44px}
 .integration-api svg{width:22px;height:22px;color:var(--red);flex:none}
 .integration-api .integration-arrow{font-size:13px;color:#888;margin-left:3px}
-@media(max-width:1100px){.integration-wall{grid-template-columns:repeat(4,minmax(0,1fr))}.integration-tile{min-height:100px}}
+@media(max-width:1100px){.integration-wall{grid-template-columns:repeat(5,minmax(0,1fr))}.integration-tile{min-height:100px}}
 @media(max-width:650px){.integration-hub{padding:46px 6% 34px}.integration-heading{align-items:flex-start;flex-direction:column;gap:22px;margin-bottom:28px}.integration-heading h2{font-size:34px}.integration-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.integration-tile{min-height:92px;font-size:15px;padding:20px 12px}.integration-wordmark{max-width:112px;max-height:28px}.integration-symbol{width:23px;height:23px}}
 
 
@@ -1036,3 +1036,7 @@ a.sol-item:hover .sol-pkg{transform:scale(1.08)}
  #industries-dialog .ind-col li{font-size:14px}
  .ind-dialog-foot{justify-content:flex-start}
 }
+
+/* Integrations wall: wordmark logos never spill out of a narrow tile (five across down to 651px) */
+.integration-tile .integration-wordmark{max-width:min(128px,100%)}
+@media(max-width:650px){.integration-tile .integration-wordmark{max-width:min(112px,100%)}}
