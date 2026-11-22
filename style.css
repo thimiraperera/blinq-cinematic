@@ -816,17 +816,16 @@ footer{padding-inline:var(--gutter-wide)}
 #solutions .res-panel{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 .sol-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;gap:6px 32px}
 .res-col .sol-grid li+li{margin-top:0}
-a.sol-item{align-items:flex-start}
+a.sol-item{align-items:center}
 .sol-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:#f4f4f5;transition:background-color .2s,box-shadow .2s}
-.sol-pkg{display:block;width:36px;height:36px;background:url(assets/pricing-icons.webp) var(--pkg,0 0)/300% 200% no-repeat;transition:transform .25s}
-.sol-pkg.is-other{background:url(assets/other-industries-icon.svg) center/contain no-repeat}
+.sol-pkg{display:block;width:30px;height:30px;background:url(assets/solution-icons.webp) var(--pkg,0 0)/300% 200% no-repeat;transition:transform .25s}
 a.sol-item:hover .sol-icon{background:#fff;box-shadow:0 0 0 1px #e4e4e7,0 8px 16px -10px #0000004d}
 a.sol-item:hover .sol-pkg{transform:scale(1.08)}
-.sol-text{display:grid;gap:3px;padding-top:2px}
+.sol-text{display:grid;gap:3px}
 .sol-text b{color:var(--ink);font-size:15px;font-weight:600}
 .sol-text small{color:#77777c;font-size:13px;line-height:1.4}
 @media(max-width:1020px){.sol-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
-@media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}.mega-resources-mobile .sol-pkg{width:31px;height:31px}}
+@media(max-width:800px){.mega-resources-mobile .sol-list{grid-template-columns:1fr}.mega-resources-mobile .sol-icon{width:36px;height:36px;border-radius:10px}.mega-resources-mobile .sol-pkg{width:26px;height:26px}}
 
 /* Contact popup: the booking popup's frame, with a short form */
 #contact-dialog{width:calc(100% - 32px);max-width:940px;max-height:calc(100svh - 32px);padding:0;border-radius:18px;overflow:auto;background:#fff;box-shadow:0 30px 90px #00000059}
@@ -1040,3 +1039,10 @@ a.sol-item:hover .sol-pkg{transform:scale(1.08)}
 /* Integrations wall: wordmark logos never spill out of a narrow tile (five across down to 651px) */
 .integration-tile .integration-wordmark{max-width:min(128px,100%)}
 @media(max-width:650px){.integration-tile .integration-wordmark{max-width:min(112px,100%)}}
+
+/* Solutions menu: the five window furnishing packages, then Other industries set apart in the same slot
+   as a lightly shaded card with a dashed edge, since it is a different kind of business */
+a.sol-item.sol-other{outline:1px dashed #cfcfd4;outline-offset:-1px;background:#fafafa}
+a.sol-item.sol-other:hover{background:#f1f1f3}
+a.sol-item.sol-other .sol-icon{background:#fff;box-shadow:0 0 0 1px #ececef}
+a.sol-item.sol-other small{color:#b3141a}
