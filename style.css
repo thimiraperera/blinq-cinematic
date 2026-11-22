@@ -1046,3 +1046,5 @@ a.sol-item.sol-other{outline:1px dashed #cfcfd4;outline-offset:-1px;background:#
 a.sol-item.sol-other:hover{background:#f1f1f3}
 a.sol-item.sol-other .sol-icon{background:#fff;box-shadow:0 0 0 1px #ececef}
 a.sol-item.sol-other small{color:#b3141a}
+/* Find your BlinQ: the RetailSelect photo sits slightly left of centre so both faces stay in the phone crop */
+#retail>img{object-position:46% 50%}
