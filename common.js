@@ -162,7 +162,7 @@ const officePhone=()=>({au:['+61388444864','+61 3 8844 4864'],uk:['+441173257254
  let press=null;
  addEventListener('pointerdown',e=>{press={x:e.clientX,y:e.clientY,t:performance.now()}},true);
  addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')press=null},true);
- const isSheet=d=>(d.id==='booking-dialog'||d.id==='contact-dialog')&&phone.matches;
+ const isSheet=d=>(d.id==='booking-dialog'||d.id==='contact-dialog'||d.classList.contains('sheet-dialog'))&&phone.matches;
  const hidden=d=>reduce.matches?{opacity:0,transform:'none'}:isSheet(d)?{opacity:1,transform:'translateY(100%)'}:{opacity:0,transform:'translateY(10px) scale(.92)'};
  const timing=(d,opening)=>reduce.matches?{duration:opening?200:160,easing:'ease'}
   :opening?{duration:isSheet(d)?520:460,easing:isSheet(d)?'cubic-bezier(.32,.72,0,1)':'cubic-bezier(.2,.9,.25,1)'}
