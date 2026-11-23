@@ -116,7 +116,7 @@
 .mk-empty p{margin:0 0 12px;font-size:17px}
 
 /* "List your business": for BlinQ customers */
-.mk-join{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px;align-items:center;padding:96px var(--gutter-wide);background:var(--night);color:#fff}
+.mk-join{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px;align-items:center;margin:0 var(--gutter-wide) 96px;padding:80px clamp(24px,5vw,72px);border-radius:28px;background:radial-gradient(70% 90% at 100% 0%,#de161d38,transparent 62%),radial-gradient(55% 75% at 0% 100%,#ffffff0f,transparent 70%),var(--night);color:#fff} /* a rounded card, so a white gap keeps it apart from the dark footer */
 .mk-join .eyebrow{color:var(--red-on-dark)}
 .mk-join h2{margin:12px 0 18px;color:#fff;font-size:clamp(32px,calc(3.2*var(--site-vw)),48px);font-weight:550;letter-spacing:-1.6px;line-height:1.1;text-wrap:balance}
 .mk-join-copy>p:not(.eyebrow){max-width:520px;margin:0;color:#c9c9ce;font-size:17px;line-height:1.65}
@@ -347,7 +347,7 @@
  .mk-hero{grid-template-columns:minmax(0,1fr);gap:36px;padding:48px var(--gutter-wide) 56px}
  .mk-hero-photo{aspect-ratio:4/3}
  .mk-type-tiles{margin-top:4px}
- .mk-join{grid-template-columns:minmax(0,1fr);gap:40px;padding:72px var(--gutter-wide)}
+ .mk-join{grid-template-columns:minmax(0,1fr);gap:40px;margin-bottom:56px;padding:56px 22px;border-radius:22px}
  .pf-body{grid-template-columns:minmax(0,1fr);padding:40px var(--gutter-wide) 64px}
  .pf-side{display:none}
  .pf-bar{display:flex}
