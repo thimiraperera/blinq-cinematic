@@ -38,6 +38,7 @@
 .in-card div>span{display:block;color:var(--muted)}
 .in-card-top{left:20px;top:20px}
 .in-card-bottom{right:20px;bottom:20px}
+.in-card-bottom.is-left{right:auto;left:20px}
 .in-card-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:12px;background:var(--ink);color:#fff}
 .in-card-icon.is-red{border-radius:50%;background:var(--red)}
 .in-card-icon svg{width:18px;height:18px}
@@ -137,8 +138,11 @@
  .in-pain-grid,.in-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .in-apps{grid-template-columns:minmax(0,1fr);gap:28px}
 }
+/* With one card left, it sits bottom-left: faces are usually in the top half of the hero photo */
 @media(max-width:1180px) and (min-width:901px){
  .in-hero-photo .in-card-bottom{display:none}
+ .in-hero-photo .in-card-top{top:auto;bottom:20px}
+ .in-panel .in-card-list li:nth-child(n+2){display:none}
 }
 @media(max-width:1000px){
  .in-steps{grid-template-columns:minmax(0,1fr);gap:0;max-width:560px;margin:0 auto}
@@ -169,12 +173,17 @@
  .in-card-icon{width:32px;height:32px}
  .in-card-top{left:12px;top:12px}
  .in-card-bottom{right:12px;bottom:12px}
+ .in-card-bottom.is-left{right:auto;left:12px}
  .in-card:has(.in-card-list){min-width:0;padding:11px 12px}
+}
+@media(max-width:700px){
+ .in-panel .in-card-list li:nth-child(n+2){display:none} /* the photo is small here: one job keeps the card clear of faces */
 }
 @media(max-width:600px){
  .in-pain-grid,.in-feature-grid{grid-template-columns:minmax(0,1fr)}
  .in-trial{flex-direction:column;padding:8px}
  .in-trial .btn{height:48px}
  .in-hero-photo .in-card-bottom{display:none}
+ .in-hero-photo .in-card-top{top:auto;bottom:12px}
 }
 @media(prefers-reduced-motion:reduce){.in-panel.is-in{animation:none}}
